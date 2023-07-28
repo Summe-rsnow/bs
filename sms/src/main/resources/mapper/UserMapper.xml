@@ -1,0 +1,19 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sms.mapper.UserMapper">
+    <select id="selectUserVoPage" resultType="com.sms.vo.UserVo">
+        select id,
+               username,
+               name,
+               email,
+               gender,
+               age,
+               phone,
+               id_number,
+               user_grant,
+               status,
+               avatar
+        from user
+        where deleted = 0
+    </select>
+</mapper>

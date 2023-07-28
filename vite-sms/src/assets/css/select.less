@@ -1,0 +1,63 @@
+.container {
+    position: fixed;
+    left: 18%;
+    top: 6%;
+
+    .tablecontainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .title {
+            margin: 0 0 20px;
+            padding: 20px 660px 10px;
+            border-bottom: 2px solid #ccc;
+        }
+
+        .table {
+            table {
+                box-shadow:14px 14px 40px #343a40;
+                border-collapse: collapse;
+                width: 1450px;
+
+                th {
+                    height: 80px;
+                    border: 1px solid #ccc;
+                    background-color: #343a40;
+                }
+
+                td {
+                    text-align: center;
+                    justify-self: center;
+                    height: 60px;
+                    padding: 0 10px;
+                    border: 1px solid #ccc;
+                    background-color: #51657AFF;
+                }
+            }
+        }
+
+        .pagination {
+            margin-top: 12px;
+            position: fixed;
+            left: 50%;
+            bottom: 2%;
+
+            button {
+                margin: 4px;
+                border-style: none;
+                border-radius: 8px;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+button{
+    box-shadow:4px 3px 6px #343a40;
+
+    &:active{
+        box-shadow:4px 3px 6px #343a40 inset;
+    }
+}
