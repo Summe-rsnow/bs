@@ -30,7 +30,7 @@ public class UserController {
     boolean enableVerificationCode;
 
     @PostMapping("/login")
-    public Result<UserVo> login(HttpServletRequest request, @RequestBody UserDto userDto) throws SQLException {
+    public Result<UserVo> login(HttpServletRequest request, @RequestBody UserDto userDto) {
         log.info("登录学生信息:{}", userDto);
         String vcode = (String) request.getSession().getAttribute("vcode");
         if (enableVerificationCode) {
