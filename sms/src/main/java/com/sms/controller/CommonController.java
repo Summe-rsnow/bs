@@ -1,7 +1,5 @@
 package com.sms.controller;
 
-import cn.hutool.captcha.CaptchaUtil;
-import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
@@ -10,6 +8,7 @@ import com.sms.common.BaseContext;
 import com.sms.common.Result;
 import com.sms.entity.User;
 import com.sms.service.UserService;
+import com.sms.utils.ValidateCodePicUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
@@ -125,15 +123,20 @@ public class CommonController {
 
     //验证码返回接口
     @GetMapping("/vcode")
-    public void vcode(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        //定义图形验证码的长和宽
+    public void vcode(HttpServletResponse response) throws IOException {
+        /*
+        外部工具类实现
         LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(140, 37);
         lineCaptcha.createCode();
-        String vcode = lineCaptcha.getCode();
-        log.info("生成的验证码是：{}", vcode);
+        String vcode = lineCaptcha.getCode();*/
+
+        //定义图形验证码的长，宽和长度
+        ValidateCodePicUtils.ValidateCodePic validateCodePic = ValidateCodePicUtils.create(140, 37, 4);
+        String code = validateCodePic.getCode();
+        log.info("生成的验证码是：{}", code);
         //输出流，将验证码写回浏览器
         ServletOutputStream servletOutputStream = response.getOutputStream();
         response.setContentType("image/jpeg");
-        lineCaptcha.write(servletOutputStream);
+        validateCodePic.write(servletOutputStream);
     }
 }
