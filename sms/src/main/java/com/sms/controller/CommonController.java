@@ -44,9 +44,8 @@ public class CommonController {
     public Result<String> upload(MultipartFile file) throws IOException {
         //获取文件原始文件名,并获文件后缀
         User user = userService.getById(BaseContext.getCurrentId());
-        String userAvatar = user.getAvatar();
-        String fileName = userAvatar;
-        String path = basePath + "\\" + userAvatar;
+        String fileName = user.getAvatar();
+        String path = basePath + "\\" + fileName;
         saveAvatar(file, path, fileName);
         return Result.success(fileName);
     }

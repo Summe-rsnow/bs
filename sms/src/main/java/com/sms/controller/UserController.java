@@ -58,18 +58,8 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public Result<String> insert(@RequestBody User user) {
-        if (!userService.isAdmin()) {
-            return Result.error("当前用户没有该操作权限");
-        }
-        log.info("新增学生信息:{}", user);
-        String md5Password = DigestUtils.md5DigestAsHex("123456".getBytes());
-        user.setPassword(md5Password);
-        user.setStatus(1);
-        Snowflake snowflake = IdUtil.getSnowflake(1, 1);
-        user.setAvatar(snowflake.nextIdStr() + ".png");
-        userService.save(user);
-        return Result.success("新增成功");
+    public Result<String> add(@RequestBody User user) {
+        return userService.addUser(user);
     }
 
     //管理员修改成员的信息
