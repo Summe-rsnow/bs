@@ -26,7 +26,7 @@
         <div class="file">
           <div class="select">
             <label for="select">选择头像</label>
-            <input type="file" id="select" name="select" v-on:change="onFileChange" accept="image/*">
+            <input id="select" accept="image/*" name="select" type="file" v-on:change="onFileChange">
           </div>
           <button class="upload" @click="uploadFile">上传头像</button>
         </div>
@@ -83,10 +83,10 @@
         v-if="cropperVisible"
         :imagePath="imagePath"
         fileType="blob"
-        @save="onSave"
-        @cancel="onCancel"
-        mode="scale"
         imageType="image/png"
+        mode="scale"
+        @cancel="onCancel"
+        @save="onSave"
     />
     <!-- 背景模糊层 -->
     <div :class="{ 'blur-background': blur === true }"></div>
@@ -205,13 +205,11 @@ const submitForm = () => {
 }
 
 const submitPwd = () => {
-  if (!pwd.oldPwd){
+  if (!pwd.oldPwd) {
     alert('请输入原密码！');
-  }
-  else if (pwd.newPwd !== pwd.confirmPwd) {
+  } else if (pwd.newPwd !== pwd.confirmPwd) {
     alert('确认密码于新密码不一致！');
-  }
-  else {
+  } else {
     // 提交表单数据
     post('/user/pwd', pwd,
         () => {

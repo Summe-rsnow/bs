@@ -69,4 +69,17 @@ const prevPage = () => {
 
 <style lang="less" scoped>
 @import "../assets/css/select";
+table td:nth-child(1),
+table td:nth-child(2) {
+  width: 27%;
+}
+
+table td:nth-child(3),
+table td:nth-child(4) {
+  width: 18%;
+}
+
+table td:nth-child(5) {
+  width: 10%;
+}
 </style>

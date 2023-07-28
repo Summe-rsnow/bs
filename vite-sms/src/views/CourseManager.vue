@@ -189,18 +189,23 @@ const resetFormData = () => {
 
 <style lang="less" scoped>
 @import "../assets/css/manager";
+
 table td:nth-child(1) {
   width: 28%;
 }
+
 table td:nth-child(2) {
   width: 19%;
 }
+
 table td:nth-child(3) {
   width: 28%;
 }
+
 table td:nth-child(4) {
   width: 12%;
 }
+
 table td:nth-child(5) {
   width: 13%;
 }

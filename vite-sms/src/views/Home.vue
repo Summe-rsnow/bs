@@ -2,7 +2,7 @@
   <div class="container">
     <div class="header">
       <div class="user">
-        <img alt="" :src="userStore.avatarSrc"
+        <img :src="userStore.avatarSrc" alt=""
              style="width: 50px;height: 50px;border-radius: 25px;margin: 0 15px">
         <h3>
           {{ userStore.user.name }}

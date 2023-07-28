@@ -18,7 +18,8 @@
             <td>
               <div style="display: flex;justify-content: space-around;">
                 <button class="l" @click="edit(row)"><img alt="" src="../assets/icons/edit.svg">修改</button>
-                <button v-if="row.status ===1" class="n" @click="banUser(row.id,0)"><img alt="" src="../assets/icons/no.svg">禁用
+                <button v-if="row.status ===1" class="n" @click="banUser(row.id,0)"><img alt=""
+                                                                                         src="../assets/icons/no.svg">禁用
                 </button>
                 <button v-else class="y" @click="banUser(row.id,1)"><img alt="" src="../assets/icons/yes.svg">启用
                 </button>
@@ -357,26 +358,33 @@ const resetFormData = () => {
 
 <style lang="less" scoped>
 @import "../assets/css/manager";
+
 table td:nth-child(1) {
   width: 20%;
 }
+
 table td:nth-child(2) {
   width: 10%;
 }
+
 table td:nth-child(4) {
   width: 18%;
 }
+
 table td:nth-child(3),
 table td:nth-child(5),
-table td:nth-child(6){
+table td:nth-child(6) {
   width: 5%;
 }
+
 table td:nth-child(7) {
   width: 10%;
 }
+
 table td:nth-child(8) {
   width: 7%;
 }
+
 table td:nth-child(9) {
   width: 20%;
 }

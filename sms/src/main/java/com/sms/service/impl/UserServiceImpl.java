@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sms.common.BaseContext;
 import com.sms.common.Result;
+import com.sms.dto.PwdDto;
 import com.sms.dto.UserDto;
 import com.sms.entity.User;
 import com.sms.mapper.UserMapper;
@@ -33,18 +34,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //将密码进行MD5加密
         String password = DigestUtils.md5DigestAsHex(userDto.getPassword().getBytes());
         if (user == null || !user.getPassword().equals(password)) {//判断密码是否正确
-            return Result.error("账号或密码错误，请重试");
+            return Result.error("用户名或密码错误，请重试");
         }
         if (user.getStatus() == 0) {//判断账户是否可用  0为不可用 1为可用 2逻辑删除
-            return Result.error("账户已禁用，请重试");
+            return Result.error("该用户名已禁用，请重试");
         }
         if (user.getStatus() == 2) {//判断账户是否可用  0为不可用 1为可用 2逻辑删除
-            return Result.error("账户不存在，请重试");
+            return Result.error("该用户名不存在，请重试");
         }
         request.getSession().setAttribute("userId", user.getId());//在request域中存储用户id 表示为登录状态
         UserVo vo = new UserVo();
         BeanUtils.copyProperties(user, vo);
         return Result.success(vo);//返回查到对象（以json格式）
+    }
+
+    @Override
+    public Result<String> resetPassword(PwdDto pwdDto) {
+        String oldPwd = pwdDto.getOldPwd();
+        String newPwd = pwdDto.getNewPwd();
+        oldPwd = DigestUtils.md5DigestAsHex(oldPwd.getBytes());
+        Long currentId = BaseContext.getCurrentId();
+        User user = getById(currentId);
+        if (!user.getPassword().equals(oldPwd)) {
+            return Result.error("原密码错误，请重试");
+        }
+        newPwd = DigestUtils.md5DigestAsHex(newPwd.getBytes());
+        user.setPassword(newPwd);
+        updateById(user);
+        return Result.success("修改密码成功！");
     }
 
     @Override

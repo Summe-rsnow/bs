@@ -1,6 +1,6 @@
 <template>
   <form ref="myForm">
-    <input type="file" accept="image/*" @change="onChange"/>
+    <input accept="image/*" type="file" @change="onChange"/>
     <input type="button" value="提交" @click="onSubmit($event)"/>
   </form>
 
@@ -15,8 +15,8 @@
       v-if="cropperVisible"
       :imagePath="imagePath"
       fileType="blob"
-      @save="onSave"
       @cancel="onCancel"
+      @save="onSave"
   />
 </template>
 js:

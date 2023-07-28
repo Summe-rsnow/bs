@@ -11,13 +11,15 @@
         <input v-model="verificationCode" placeholder="请输入验证码" type="text">
         <img alt="" src="" @click="refreshVerificationCode">
       </div>
-      <div class="msg" >
+      <div class="msg">
         <div>{{ message }}</div>
       </div>
       <div class="function">
         <div>忘记密码？</div>
         <button @click="login">登录</button>
-        <div class="remember"><input type="checkbox"><div>记住我</div></div>
+        <div class="remember"><input type="checkbox">
+          <div>记住我</div>
+        </div>
       </div>
     </div>
   </div>
@@ -107,7 +109,7 @@ const refreshVerificationCode = () => {
       background-color: rgba(255, 255, 255, 0.58);
       width: 90%;
 
-      div{
+      div {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -138,7 +140,8 @@ const refreshVerificationCode = () => {
         border-radius: 8px;
       }
     }
-    .function{
+
+    .function {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -161,12 +164,13 @@ const refreshVerificationCode = () => {
         }
       }
 
-      .remember{
+      .remember {
         display: flex;
         justify-content: center;
         align-items: center;
         text-align: center;
-        input{
+
+        input {
           margin: 5px;
           width: auto;
         }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sms.common.BaseContext;
 import com.sms.common.Result;
+import com.sms.dto.PwdDto;
 import com.sms.dto.UserDto;
 import com.sms.entity.User;
 import com.sms.service.UserService;
@@ -51,6 +52,11 @@ public class UserController {
         return Result.success("退出成功");
     }
 
+    @PostMapping("/pwd")
+    public Result<String> pwd(@RequestBody PwdDto pwdDto){
+        return userService.resetPassword(pwdDto);
+    }
+
     @PostMapping("/add")
     public Result<String> insert(@RequestBody User user) {
         if (!userService.isAdmin()) {
@@ -94,10 +100,10 @@ public class UserController {
         BeanUtils.copyProperties(userService.getById(user.getId()), vo);
         return Result.success(vo);
     }
-    
+
     //禁用用户接口 ban=0时为禁用 ban=1时为启用
-    @GetMapping ("/ban/{ban}/{id}")
-    public Result<String> banUser(@PathVariable Long id,@PathVariable Integer ban) {
+    @GetMapping("/ban/{ban}/{id}")
+    public Result<String> banUser(@PathVariable Long id, @PathVariable Integer ban) {
         log.info("禁用用户id:{}", id);
         if (!userService.isAdmin()) {
             return Result.error("当前用户没有该操作权限");
@@ -105,8 +111,8 @@ public class UserController {
         User user = new User();
         user.setStatus(ban);
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(User::getId,id);
-        userService.update(user,wrapper);
+        wrapper.eq(User::getId, id);
+        userService.update(user, wrapper);
         return Result.success("禁用成功");
     }
 

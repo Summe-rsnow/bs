@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -36,6 +35,22 @@ public class CommonController {
 
     @Value("${sms.path}")
     private String basePath;
+
+    private static String getSuffix(MultipartFile file) {
+        String suffix = null;
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename != null) {
+            suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
+        }
+        return suffix;
+    }
+
+    private static void responseHeader(HttpServletResponse response) {
+        response.setContentType("image/jpeg");
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+    }
 
     //头像上传接口
     @PostMapping("/avatar/upload")
@@ -51,21 +66,12 @@ public class CommonController {
             Snowflake snowflake = IdUtil.getSnowflake(1, 1);
             fileName = snowflake.nextIdStr() + suffix;
             updateAvatar(fileName);
-        }else {
+        } else {
             fileName = userAvatar;
         }
         path = basePath + "\\" + userAvatar;
         saveAvatar(file, path, fileName);
         return Result.success(fileName);
-    }
-
-    private static String getSuffix(MultipartFile file) {
-        String suffix = null;
-        String originalFilename = file.getOriginalFilename();
-        if (originalFilename != null) {
-            suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
-        }
-        return suffix;
     }
 
     private void saveAvatar(MultipartFile file, String path, String fileName) throws IOException {
@@ -80,8 +86,8 @@ public class CommonController {
         User user = userService.getById(BaseContext.getCurrentId());
         user.setAvatar(fileName);
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(User::getId,user.getId());
-        userService.update(user,wrapper);
+        wrapper.eq(User::getId, user.getId());
+        userService.update(user, wrapper);
     }
 
     //头像下载接口
@@ -115,13 +121,6 @@ public class CommonController {
         } catch (Exception e) {
             log.error(String.valueOf(e));
         }
-    }
-
-    private static void responseHeader(HttpServletResponse response) {
-        response.setContentType("image/jpeg");
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        response.setHeader("Pragma", "no-cache");
-        response.setDateHeader("Expires", 0);
     }
 
     //验证码返回接口
