@@ -31,6 +31,8 @@ mybatis-plus:
 sms:
   path: D:\avatar
   verificationCode: false
+  my-secret-key: cjl
+  timeout: 86400000 # 1天时间
 logging:
   level:
     com.baomidou.mybatisplus.extension.plugins: warn

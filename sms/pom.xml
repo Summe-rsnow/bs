@@ -33,6 +33,13 @@
             <scope>compile</scope>
         </dependency>
 
+        <!--JWT支持-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+
         <!--数据库支持-->
         <dependency>
             <groupId>com.baomidou</groupId>
