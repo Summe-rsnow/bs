@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.sms.common.Result;
 import com.sms.dto.PwdDto;
 import com.sms.dto.UserDto;
+import com.sms.dto.UserSelectDto;
 import com.sms.entity.User;
 import com.sms.vo.UserVo;
 
@@ -25,5 +26,5 @@ public interface UserService extends IService<User> {
 
     Integer grantLevel();
 
-    Page<UserVo> getVoPage(Integer page, Integer pagesize);
+    Page<UserVo> getVoPage(Integer page, Integer pagesize, UserSelectDto userSelectDto);
 }

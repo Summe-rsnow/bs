@@ -100,7 +100,6 @@ import {reactive, ref} from "vue";
 import {useUserStore} from "../stores/index.js";
 import {uploadAvatar, post, downloadAvatar} from '../net/index.js';
 import router from "../router/index.js";
-import axios from "axios";
 
 const userStore = useUserStore();
 const userGrantLevel = reactive(['管理员', '教师', '学生']);

@@ -9,7 +9,7 @@ const defaultFailure = (msg) => console.log(msg);
 const defaultError = (error) => console.log(error);
 
 function getToken() {
-    return userStore.user.token;
+    return userStore.token;
 }
 
 axios.interceptors.request.use(
@@ -68,10 +68,8 @@ function uploadAvatar(data, success, failure = defaultFailure, error = defaultEr
 function downloadAvatar() {
     axios.post('common/avatar/download/' + userStore.user.id, {}, {responseType: 'blob'})
         .then((res) => {
-            // 创建URL对象
-            const url = URL.createObjectURL(res.data);
             //设置src属性
-            userStore.avatarUrl = url;
+            userStore.avatarUrl = URL.createObjectURL(res.data);
         })
         .catch(defaultError);
 }

@@ -6,6 +6,7 @@ import com.sms.common.BaseContext;
 import com.sms.common.Result;
 import com.sms.dto.PwdDto;
 import com.sms.dto.UserDto;
+import com.sms.dto.UserSelectDto;
 import com.sms.entity.User;
 import com.sms.service.UserService;
 import com.sms.vo.UserVo;
@@ -60,6 +61,8 @@ public class UserController {
     //管理员修改成员的信息
     @PostMapping("/edit")
     public Result<UserVo> edit(@RequestBody User user) {
+        //不允许修改权限
+        user.setUserGrant(null);
         log.info("修改信息:{}", user);
         if (!userService.isAdmin()) {
             return Result.error("当前用户没有该操作权限");
@@ -112,10 +115,10 @@ public class UserController {
     }
 
     @PostMapping("/{page}/{pagesize}")
-    public Result<Page<UserVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize) {
+    public Result<Page<UserVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize,@RequestBody UserSelectDto userSelectDto) {
         if (!userService.isAdmin()) {
             return Result.success("当前用户没有该操作权限");
         }
-        return Result.success(userService.getVoPage(page, pagesize));
+        return Result.success(userService.getVoPage(page, pagesize,userSelectDto));
     }
 }

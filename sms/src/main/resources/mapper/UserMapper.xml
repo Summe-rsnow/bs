@@ -1,19 +1,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sms.mapper.UserMapper">
-    <select id="selectUserVoPage" resultType="com.sms.vo.UserVo">
+    <select id="selectUserVoPage" resultType="com.sms.vo.UserVo" parameterType="com.sms.dto.UserSelectDto">
         select id,
-               username,
-               name,
-               email,
-               gender,
-               age,
-               phone,
-               id_number,
-               user_grant,
-               status,
-               avatar
+        username,
+        name,
+        email,
+        gender,
+        age,
+        phone,
+        id_number,
+        user_grant,
+        status,
+        avatar
         from user
         where deleted = 0
+        <if test="userSelectDto.name != null and userSelectDto.name != ''">
+            and name like '%${userSelectDto.name}%'
+        </if>
+        <if test="userSelectDto.gender != null and userSelectDto.gender != ''">
+            and gender = '${userSelectDto.gender}'
+        </if>
+        <if test="userSelectDto.userGrant != null and userSelectDto.userGrant != -1">
+            and user_grant = ${userSelectDto.userGrant}
+        </if>
     </select>
 </mapper>

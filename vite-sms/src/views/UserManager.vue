@@ -3,7 +3,10 @@
     <div class="tablecontainer">
       <h1 class="title">用户管理</h1>
       <div class="table">
-        <button class="add" @click="add"><img alt="" src="../assets/icons/add.svg">新增</button>
+        <div class="function">
+          <button class="add" @click="add"><img alt="" src="../assets/icons/add.svg">新增</button>
+          <button class="select" @click="select"><img alt="" src="../assets/icons/search.svg">查询</button>
+        </div>
         <table>
           <thead>
           <tr>
@@ -88,6 +91,34 @@
         </div>
       </form>
     </div>
+    <div v-if="showSelectFormFlag" class="form">
+      <h2>条件查询</h2>
+      <form>
+        <label for="name">姓名：</label>
+        <!-- 将表单数据绑定到 formData.name -->
+        <input id="name" v-model="selectData.name" type="text"><br>
+        <label for="gender">性别：</label>
+        <!-- 将表单数据绑定到 formData.gender -->
+        <select id="gender" v-model="selectData.gender">
+          <option value=""></option>
+          <option value="男">男</option>
+          <option value="女">女</option>
+        </select><br>
+        <label for="userGrant">权限：</label>
+        <!-- 将表单数据绑定到 formData.userGrant -->
+        <select id="userGrant" v-model="selectData.userGrant">
+          <option value="-1"></option>
+          <option value="1">教师</option>
+          <option value="2">学生</option>
+          <option value="0">管理员</option>
+        </select><br>
+
+        <div class="button">
+          <button class="l" @click="submitSelectForm">保存</button>
+          <button class="r" @click="cancelForm">取消</button>
+        </div>
+      </form>
+    </div>
     <div v-if="showEditFormFlag" class="form">
       <h2>添加用户</h2>
       <form>
@@ -117,14 +148,6 @@
         <label for="idNumber">身份证号码：</label>
         <!-- 将表单数据绑定到 formData.idNumber -->
         <input id="idNumber" v-model="formData.idNumber" type="text"><br>
-
-        <label for="userGrant">权限：</label>
-        <!-- 将表单数据绑定到 formData.userGrant -->
-        <select id="userGrant" v-model="formData.userGrant">
-          <option value="1">教师</option>
-          <option value="2">学生</option>
-          <option value="0">管理员</option>
-        </select><br>
 
         <div class="button">
           <button class="l" @click="submitEditForm">保存</button>
@@ -165,6 +188,7 @@ const userPage = reactive({
 });
 const blur = ref(false);
 const showAddFormFlag = ref(false);
+const showSelectFormFlag = ref(false);
 const showEditFormFlag = ref(false);
 const showBanFormFlag = ref(false);
 const showDelFormFlag = ref(false);
@@ -185,8 +209,15 @@ const formData = reactive({
   userGrant: 2,
 });
 
+//创建新的响应式对象来保存条件查询数据
+const selectData = reactive({
+  name: '',
+  gender: '',
+  userGrant: -1,
+});
+
 const flash = () => {
-  get(`/user/${page.value}/${pagesize.value}`,
+  post(`/user/${page.value}/${pagesize.value}`,selectData,
       (data, msg) => {
         userPage.records = data.records;
         userPage.total = data.total;
@@ -213,6 +244,11 @@ const prevPage = () => {
 const add = () => {
   blur.value = true;
   showAddFormFlag.value = true;
+}
+
+const select = () => {
+  blur.value = true;
+  showSelectFormFlag.value = true;
 }
 
 const edit = (row) => {
@@ -286,6 +322,12 @@ const submitAddForm = () => {
   cancelForm();
 }
 
+const submitSelectForm = () => {
+  // 提交表单数据
+  flash();
+  cancelForm();
+}
+
 const submitEditForm = () => {
   const email = formData.email;
   const phone = formData.phone;
@@ -340,6 +382,7 @@ const cancelForm = () => {
   showEditFormFlag.value = false;
   showBanFormFlag.value = false;
   showDelFormFlag.value = false;
+  showSelectFormFlag.value = false;
   blur.value = false;
 }
 

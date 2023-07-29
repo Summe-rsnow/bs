@@ -11,6 +11,7 @@ import com.sms.common.BaseContext;
 import com.sms.common.Result;
 import com.sms.dto.PwdDto;
 import com.sms.dto.UserDto;
+import com.sms.dto.UserSelectDto;
 import com.sms.entity.User;
 import com.sms.mapper.UserMapper;
 import com.sms.service.UserService;
@@ -142,8 +143,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Page<UserVo> getVoPage(Integer page, Integer pagesize) {
+    public Page<UserVo> getVoPage(Integer page, Integer pagesize, UserSelectDto userSelectDto) {
         Page<UserVo> userVoPage = new Page<>(page, pagesize);
-        return userMapper.selectUserVoPage(userVoPage);
+        return userMapper.selectUserVoPage(userVoPage,userSelectDto);
     }
 }
