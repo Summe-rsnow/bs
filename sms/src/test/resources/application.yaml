@@ -1,6 +1,5 @@
 server:
   port: 8081
-
 spring:
   servlet:
     multipart:
@@ -16,7 +15,6 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
   main:
     banner-mode: off
-
 mybatis-plus:
   configuration:
     #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射 addUser -> add_user
@@ -30,14 +28,12 @@ mybatis-plus:
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
     banner: false
   mapper-locations: classpath:mapper/*.xml
-
 sms:
   path: D:\avatar
   verificationCode: false
   jwt:
-    my-secret-key: summersnow
+    my-secret-key: cjl
     timeout: 86400000 # 1天时间
-
 logging:
   level:
     com.baomidou.mybatisplus.extension.plugins: warn

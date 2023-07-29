@@ -98,8 +98,9 @@ import Cropper from "vue3-cropper";
 import 'vue3-cropper/lib/vue3-cropper.css';
 import {reactive, ref} from "vue";
 import {useUserStore} from "../stores/index.js";
-import {avatar, post} from '../net/index.js';
+import {uploadAvatar, post, downloadAvatar} from '../net/index.js';
 import router from "../router/index.js";
+import axios from "axios";
 
 const userStore = useUserStore();
 const userGrantLevel = reactive(['管理员', '教师', '学生']);
@@ -112,7 +113,7 @@ const pwd = reactive({
   confirmPwd: ''
 });
 const cropperVisible = ref(false);
-const imagePath = ref(userStore.avatarSrc);
+const imagePath = ref(userStore.avatarUrl);
 let file;
 
 // 创建新的响应式对象来保存表单数据
@@ -150,10 +151,10 @@ const uploadFile = () => {
   }
   const formData = new FormData();
   formData.append('file', file);
-  avatar(formData,
+  uploadAvatar(formData,
       (data, msg) => {
         userStore.user.avatar = msg;
-        userStore.avatarSrc = `api/common/avatar/download?${Date.now()}`;
+        downloadAvatar();
       })
 }
 
@@ -232,7 +233,7 @@ const cancelForm = () => {
 
 const onCancel = () => {
   file = undefined;
-  imagePath.value = userStore.avatarSrc;
+  imagePath.value = userStore.avatarUrl;
   cropperVisible.value = false;
 }
 </script>

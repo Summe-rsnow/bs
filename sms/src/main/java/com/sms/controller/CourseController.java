@@ -25,7 +25,7 @@ public class CourseController {
     UserService userService;
 
     @PostMapping("/add")
-    public Result add(@RequestBody Course course) {
+    public Result<String> add(@RequestBody Course course) {
         if (!userService.isAdmin()) {
             return Result.error("当前用户没有该操作权限");
         }
@@ -50,8 +50,8 @@ public class CourseController {
         return Result.success("修改成功");
     }
 
-    @DeleteMapping("/del/{id}")
-    public Result editInfo(@PathVariable(value = "id") Long id) {
+    @PostMapping("/del/{id}")
+    public Result<String> editInfo(@PathVariable(value = "id") Long id) {
         log.info("删除课程id:{}", id);
         if (!userService.isAdmin()) {
             return Result.error("当前用户没有该操作权限");
@@ -60,7 +60,7 @@ public class CourseController {
         return Result.success("删除成功");
     }
 
-    @GetMapping("/{page}/{pagesize}")
+    @PostMapping("/{page}/{pagesize}")
     public Result<Page<CourseVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize) {
         if (!userService.isAdmin()) {
             return Result.success("当前用户没有该操作权限");

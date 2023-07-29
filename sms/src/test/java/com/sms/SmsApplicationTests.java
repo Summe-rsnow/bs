@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class SmsApplicationTests {
 
     @Test
-    void contextLoads() {
+    void JwtTest() {
     }
 
 }

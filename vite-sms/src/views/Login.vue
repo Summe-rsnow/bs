@@ -42,12 +42,10 @@ onMounted(() => {
 
 // 发送登录请求到后端
 const login = () => {
-  // if (verificationCode.value!==sessionStorage.getItem("vcode")){
-  //   return
-  // }
   post('/user/login', {username: username.value, password: password.value, verificationCode: verificationCode.value},
       (data, msg) => {
         userStore.user = data;
+        userStore.token = data.token;
         router.push('/home');
       },
       (msg) => {

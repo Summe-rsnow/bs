@@ -15,4 +15,5 @@ public class UserVo {
     private Integer userGrant;//权限等级 0管理员 1教师 2学生
     private Integer status;//0启用 1禁用 2逻辑删除
     private String avatar;//头像图片的名称
+    private String token;//令牌
 }

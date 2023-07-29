@@ -1,53 +1,79 @@
 import axios from 'axios';
+import {useUserStore} from '../stores/index.js';
 
 axios.defaults.baseURL = '/api';
 axios.defaults.withCredentials = true;
 
+const userStore = useUserStore();
 const defaultFailure = (msg) => console.log(msg);
 const defaultError = (error) => console.log(error);
 
+function getToken() {
+    return userStore.user.token;
+}
+
+axios.interceptors.request.use(
+    (config) => {
+        // 在 GET 请求中添加请求头
+        if (getToken()) {
+            // 添加通用的请求头
+            config.headers['Authorization'] = getToken();
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+
+//所有请求底层都为post
 function post(url, data, success, failure = defaultFailure, error = defaultError) {
     axios.post(url, data)
         .then(({data}) => {
-            if (data.code === 1)
-                success(data.data, data.msg)
-            else
-                failure(data.msg)
-        }).catch(error)
+            if (data.code === 1) success(data.data, data.msg);
+            else failure(data.msg);
+        })
+        .catch(error);
 }
 
 function get(url, success, failure = defaultFailure, error = defaultError) {
-    axios.get(url)
+    axios.post(url)
         .then(({data}) => {
-            if (data.code === 1)
-                success(data.data, data.msg)
-            else
-                failure(data.msg)
-        }).catch(error)
+            if (data.code === 1) success(data.data, data.msg);
+            else failure(data.msg);
+        })
+        .catch(error);
 }
 
 function del(url, success, failure = defaultFailure, error = defaultError) {
-    axios.delete(url)
+    axios.post(url)
         .then(({data}) => {
-            if (data.code === 1)
-                success(data.data, data.msg)
-            else
-                failure(data.msg)
-        }).catch(error)
+            if (data.code === 1) success(data.data, data.msg);
+            else failure(data.msg);
+        })
+        .catch(error);
 }
 
-function avatar(data, success, failure = defaultFailure, error = defaultError) {
+function uploadAvatar(data, success, failure = defaultFailure, error = defaultError) {
     axios.post('/common/avatar/upload', data, {
         headers: {
-            'Content-Type': 'multipart/form-data'
-        }
+            'Content-Type': 'multipart/form-data',
+        },
     })
         .then(({data}) => {
-            if (data.code === 1)
-                success(data.data, data.msg)
-            else
-                failure(data.msg)
-        }).catch(error)
+            if (data.code === 1) success(data.data, data.msg);
+            else failure(data.msg);
+        })
+        .catch(error);
 }
 
-export {get, post, del, avatar}
+function downloadAvatar() {
+    axios.post('common/avatar/download/' + userStore.user.id, {}, {responseType: 'blob'})
+        .then((res) => {
+            // 创建URL对象
+            const url = URL.createObjectURL(res.data);
+            //设置src属性
+            userStore.avatarUrl = url;
+        })
+        .catch(defaultError);
+}
+
+export {get, post, del, uploadAvatar, downloadAvatar};

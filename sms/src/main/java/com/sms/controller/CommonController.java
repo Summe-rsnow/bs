@@ -9,10 +9,7 @@ import com.sms.service.UserService;
 import com.sms.utils.ValidateCodePicUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -51,7 +48,7 @@ public class CommonController {
     }
 
     private void saveAvatar(MultipartFile file, String path, String fileName) throws IOException {
-        //此方法创建文件时，会自动插件父级文件夹
+        //此方法创建文件时，会自动创建父级文件夹
         File touch = FileUtil.touch(path);
         //将图片写入文件中
         file.transferTo(touch);
@@ -59,9 +56,9 @@ public class CommonController {
     }
 
     //头像下载接口
-    @GetMapping("/avatar/download")
-    public void avatar(HttpServletResponse response) throws IOException {
-        User user = userService.getById(BaseContext.getCurrentId());
+    @PostMapping  ("/avatar/download/{id}")
+    public void avatar(HttpServletResponse response, @PathVariable long id) throws IOException {
+        User user = userService.getById(id);
         String userAvatar = user.getAvatar();
         String fielname = basePath + "\\" + userAvatar;
         if (!FileUtil.exist(fielname)) {
@@ -75,11 +72,11 @@ public class CommonController {
         //输出流，将图片写回浏览器
         ServletOutputStream servletOutputStream = response.getOutputStream();
         byte[] bytes = IoUtil.readBytes(fileInputStream);
-        IoUtil.write(servletOutputStream,true,bytes);
+        IoUtil.write(servletOutputStream, true, bytes);
     }
 
     //验证码返回接口
-    @GetMapping("/vcode")
+    @GetMapping ("/vcode")
     public void vcode(HttpServletResponse response) throws IOException {
         //定义图形验证码的长，宽和长度
         ValidateCodePicUtils.ValidateCodePic validateCodePic = ValidateCodePicUtils.create(140, 37, 4);

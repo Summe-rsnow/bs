@@ -52,7 +52,7 @@ const router = new createRouter({
 
 router.beforeEach((to, from) => {
     const userStore = useUserStore();
-    if (userStore.user) {
+    if (userStore.token) {
         return true;
     } else {
         if (to.path === '/') {

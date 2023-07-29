@@ -26,11 +26,6 @@ public class GlobalExceptionHandler {
             String msg = split[2] + "已存在";
             return Result.error(msg);
         }
-
-        if (message.contains("because \"file\" is null")) {//错误信息包含 “双重输入” 即账号重复
-            return Result.error("请选择好头像再上传");
-        }
-
         return Result.error("未知错误");
     }
 

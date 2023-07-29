@@ -8,7 +8,6 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import java.util.List;
@@ -16,12 +15,6 @@ import java.util.List;
 @Configuration
 @Slf4j
 public class WebMvcConfig extends WebMvcConfigurationSupport {
-    @Override
-    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-        log.info("开始进行静态资源映射...");
-        registry.addResourceHandler("/backend/**").addResourceLocations("classpath:/static/backend/");
-    }
-
     @Override
     protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         log.info("扩展消息转换器");
@@ -38,7 +31,6 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         // 设置允许跨域的路径
         registry.addMapping("/**")
                 // 设置允许跨域请求的域名
-                //.allowedOriginPatterns("http://localhost:5173")
                 .allowedOriginPatterns("*")
                 // 是否允许cookie
                 .allowCredentials(true)

@@ -1,5 +1,7 @@
 package com.sms.utils;
 
+import lombok.Getter;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -8,30 +10,6 @@ import java.io.OutputStream;
 import java.util.Random;
 
 public class ValidateCodePicUtils {
-    /**
-     * 验证码图片工具类生成的实例化对象
-     */
-    public static class ValidateCodePic {
-        private final String code;
-        private final BufferedImage image;
-
-        public ValidateCodePic(String code, BufferedImage image) {
-            this.code = code;
-            this.image = image;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-        public BufferedImage getImage() {
-            return image;
-        }
-
-        public void write(OutputStream out) throws IOException {
-            ImageIO.write(this.getImage(), "JPEG", out);
-        }
-    }
     public static ValidateCodePic create(int width, int height, int length) {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics graphics = image.createGraphics();
@@ -73,6 +51,24 @@ public class ValidateCodePicUtils {
 
         graphics.dispose();
 
-        return new ValidateCodePic(code,image);
+        return new ValidateCodePic(code, image);
+    }
+
+    /**
+     * 验证码图片工具类生成的实例化对象
+     */
+    @Getter
+    public static class ValidateCodePic {
+        private final String code;
+        private final BufferedImage image;
+
+        public ValidateCodePic(String code, BufferedImage image) {
+            this.code = code;
+            this.image = image;
+        }
+
+        public void write(OutputStream out) throws IOException {
+            ImageIO.write(this.getImage(), "JPEG", out);
+        }
     }
 }

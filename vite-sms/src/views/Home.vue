@@ -2,7 +2,7 @@
   <div class="container">
     <div class="header">
       <div class="user">
-        <img :src="userStore.avatarSrc" alt=""
+        <img :src="userStore.avatarUrl" alt=""
              style="width: 50px;height: 50px;border-radius: 25px;margin: 0 15px">
         <h3>
           {{ userStore.user.name }}
@@ -35,7 +35,7 @@
 <script setup>
 import {onBeforeMount, onMounted, reactive, ref} from "vue";
 import {useUserStore} from "../stores/index.js";
-import {get} from "../net/index.js";
+import {downloadAvatar, get} from "../net/index.js";
 import router from "../router/index.js";
 
 const userStore = useUserStore();
@@ -61,6 +61,7 @@ const logout = () => {
   get('user/logout',
       (data, msg) => {
         userStore.user = null;
+        userStore.token = '';
         router.push('/');
       })
 }
@@ -69,6 +70,7 @@ const logout = () => {
 const currentDate = ref('');
 
 onBeforeMount(() => {
+  downloadAvatar();
   // 获取当前日期、星期和时间  每秒执行一次
   setInterval(() => {
     const now = new Date();

@@ -14,9 +14,11 @@ import com.sms.dto.UserDto;
 import com.sms.entity.User;
 import com.sms.mapper.UserMapper;
 import com.sms.service.UserService;
+import com.sms.utils.JwtUtils;
 import com.sms.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -26,10 +28,12 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
-
     @Resource
     UserMapper userMapper;
-
+    @Value("${sms.jwt.timeout}")
+    private long timeout;
+    @Value("${sms.jwt.my-secret-key}")
+    private String mySecretKey;
 
     @Override
     public Result<UserVo> login(HttpServletRequest request, UserDto userDto) {
@@ -48,9 +52,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (user.getStatus() == 2) {//判断账户是否可用  0为不可用 1为可用 2逻辑删除
             return Result.error("该用户名不存在，请重试");
         }
-        request.getSession().setAttribute("userId", user.getId());//在request域中存储用户id 表示为登录状态
         UserVo vo = new UserVo();
         BeanUtils.copyProperties(user, vo);
+        String token = JwtUtils.generateToken(vo.getId(), timeout, mySecretKey);
+        vo.setToken(token);
         return Result.success(vo);//返回查到对象（以json格式）
     }
 
@@ -76,7 +81,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return Result.error("当前用户没有该操作权限");
         }
         String msg = validateUser(user);
-        if (msg!=null){
+        if (msg != null) {
             return Result.error(msg);
         }
         log.info("新增学生信息:{}", user);

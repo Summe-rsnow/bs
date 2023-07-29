@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
 import java.util.Objects;
 
 @RestController
@@ -42,15 +41,14 @@ public class UserController {
         return userService.login(request, userDto);
     }
 
-    @GetMapping("/logout")
-    public Result<String> logout(HttpServletRequest request) {
+    @PostMapping("/logout")
+    public Result<String> logout() {
         log.info("退出登录");
-        request.getSession().removeAttribute("user");//在request域中去除用户id 表示为未登录状态
         return Result.success("退出成功");
     }
 
     @PostMapping("/pwd")
-    public Result<String> pwd(@RequestBody PwdDto pwdDto){
+    public Result<String> pwd(@RequestBody PwdDto pwdDto) {
         return userService.resetPassword(pwdDto);
     }
 
@@ -89,7 +87,7 @@ public class UserController {
     }
 
     //禁用用户接口 ban=0时为禁用 ban=1时为启用
-    @GetMapping("/ban/{ban}/{id}")
+    @PostMapping("/ban/{ban}/{id}")
     public Result<String> banUser(@PathVariable Long id, @PathVariable Integer ban) {
         log.info("禁用用户id:{}", id);
         if (!userService.isAdmin()) {
@@ -103,7 +101,7 @@ public class UserController {
         return Result.success("禁用成功");
     }
 
-    @DeleteMapping("/del/{id}")
+    @PostMapping("/del/{id}")
     public Result<String> delUser(@PathVariable(value = "id") Long id) {
         log.info("删除用户id:{}", id);
         if (!userService.isAdmin()) {
@@ -113,7 +111,7 @@ public class UserController {
         return Result.success("删除成功");
     }
 
-    @GetMapping("/{page}/{pagesize}")
+    @PostMapping("/{page}/{pagesize}")
     public Result<Page<UserVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize) {
         if (!userService.isAdmin()) {
             return Result.success("当前用户没有该操作权限");

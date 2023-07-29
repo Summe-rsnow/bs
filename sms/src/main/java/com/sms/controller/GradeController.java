@@ -32,7 +32,7 @@ public class GradeController {
     UserService userService;
 
     @PostMapping("/add")
-    public Result insert(@RequestBody Grade grade) {
+    public Result<String> insert(@RequestBody Grade grade) {
         if (!userService.isTeacher()) {
             return Result.error("当前用户没有该操作权限");
         }
@@ -53,8 +53,8 @@ public class GradeController {
         return Result.success("修改成功");
     }
 
-    @DeleteMapping("/del/{id}")
-    public Result editInfo(@PathVariable(value = "id") Long id) {
+    @PostMapping("/del/{id}")
+    public Result<String> editInfo(@PathVariable(value = "id") Long id) {
         log.info("删除成绩id:{}", id);
         if (!userService.isTeacher()) {
             return Result.error("当前用户没有该操作权限");
@@ -64,8 +64,8 @@ public class GradeController {
     }
 
     //学生查询自己的成绩
-    @GetMapping("/{page}/{pagesize}")
-    public Result<Page<GradeVo>> getGradePageByStudentId(HttpServletRequest request, @PathVariable Integer page, @PathVariable Integer pagesize) {
+    @PostMapping("/{page}/{pagesize}")
+    public Result<Page<GradeVo>> getGradePageByStudentId(@PathVariable Integer page, @PathVariable Integer pagesize) {
         if (!userService.isStudent()) {
             return Result.success("当前用户没有该操作权限");
         }
@@ -74,8 +74,8 @@ public class GradeController {
     }
 
     //教师查询自己所教学生的成绩信息
-    @GetMapping("/change/{page}/{pagesize}")
-    public Result<Page<GradeVo>> changeGradePage(HttpServletRequest request, @PathVariable Integer page, @PathVariable Integer pagesize) {
+    @PostMapping("/change/{page}/{pagesize}")
+    public Result<Page<GradeVo>> changeGradePage(@PathVariable Integer page, @PathVariable Integer pagesize) {
         if (!userService.isTeacher()) {
             return Result.success("当前用户没有该操作权限");
         }
@@ -84,20 +84,20 @@ public class GradeController {
     }
 
     //教师查询自己教的学生的信息
-    @GetMapping("/student/{page}/{pagesize}")
-    public Result<Page<User>> studentPage(HttpServletRequest request, @PathVariable Integer page, @PathVariable Integer pagesize) {
+    @PostMapping("/student/{page}/{pagesize}")
+    public Result<Page<User>> studentPage(@PathVariable Integer page, @PathVariable Integer pagesize) {
         if (!userService.isTeacher()) {
             return Result.success("当前用户没有该操作权限");
         }
-        Page<User> userPage = new Page<>();
+        Page<User> userPage = new Page<>(page,pagesize);
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUserGrant, 2);
         return Result.success(userService.page(userPage, wrapper));
     }
 
     //教师查询自己的课的信息
-    @GetMapping("/course/{page}/{pagesize}")
-    public Result<Page<CourseVo>> getUserPage(HttpServletRequest request, @PathVariable Integer page, @PathVariable Integer pagesize) {
+    @PostMapping("/course/{page}/{pagesize}")
+    public Result<Page<CourseVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize) {
         if (!userService.isTeacher()) {
             return Result.success("当前用户没有该操作权限");
         }
