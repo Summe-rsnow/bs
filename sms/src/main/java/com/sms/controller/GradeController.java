@@ -100,6 +100,6 @@ public class GradeController {
         if (!userService.isTeacher()) {
             return Result.success("当前用户没有该操作权限");
         }
-        return Result.success(courseService.getVoPage(page, pagesize));
+        return Result.success(courseService.getVoPage(page, pagesize,null));
     }
 }

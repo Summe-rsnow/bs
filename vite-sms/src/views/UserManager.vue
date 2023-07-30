@@ -95,17 +95,14 @@
       <h2>条件查询</h2>
       <form>
         <label for="name">姓名：</label>
-        <!-- 将表单数据绑定到 formData.name -->
         <input id="name" v-model="selectData.name" type="text"><br>
         <label for="gender">性别：</label>
-        <!-- 将表单数据绑定到 formData.gender -->
         <select id="gender" v-model="selectData.gender">
           <option value=""></option>
           <option value="男">男</option>
           <option value="女">女</option>
         </select><br>
         <label for="userGrant">权限：</label>
-        <!-- 将表单数据绑定到 formData.userGrant -->
         <select id="userGrant" v-model="selectData.userGrant">
           <option value="-1"></option>
           <option value="1">教师</option>
@@ -323,7 +320,6 @@ const submitAddForm = () => {
 }
 
 const submitSelectForm = () => {
-  // 提交表单数据
   flash();
   cancelForm();
 }

@@ -154,6 +154,7 @@ const uploadFile = () => {
       (data, msg) => {
         userStore.user.avatar = msg;
         downloadAvatar();
+        imagePath.value = userStore.avatarUrl;
       })
 }
 

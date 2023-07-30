@@ -3,6 +3,7 @@ package com.sms.controller;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sms.common.Result;
+import com.sms.dto.CourseSelectDto;
 import com.sms.entity.Course;
 import com.sms.entity.User;
 import com.sms.service.CourseService;
@@ -17,7 +18,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/course")
 @Slf4j
-public class CourseController {
+public class  CourseController {
     @Resource
     CourseService courseService;
 
@@ -61,10 +62,10 @@ public class CourseController {
     }
 
     @PostMapping("/{page}/{pagesize}")
-    public Result<Page<CourseVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize) {
+    public Result<Page<CourseVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize,@RequestBody CourseSelectDto courseSelectDto) {
         if (!userService.isAdmin()) {
             return Result.success("当前用户没有该操作权限");
         }
-        return Result.success(courseService.getVoPage(page, pagesize));
+        return Result.success(courseService.getVoPage(page, pagesize, courseSelectDto));
     }
 }

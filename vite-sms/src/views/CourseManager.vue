@@ -3,7 +3,10 @@
     <div class="tablecontainer">
       <h1 class="title">课程管理</h1>
       <div class="table">
-        <button class="add" @click="add"><img alt="" src="../assets/icons/add.svg">新增</button>
+        <div class="function">
+          <button class="add" @click="add"><img alt="" src="../assets/icons/add.svg">新增</button>
+          <button class="select" @click="select"><img alt="" src="../assets/icons/search.svg">查询</button>
+        </div>
         <table>
           <thead>
           <tr>
@@ -51,6 +54,19 @@
         </div>
       </form>
     </div>
+    <div v-if="showSelectFormFlag" class="form">
+      <h2>条件查询</h2>
+      <form>
+        <label for="name">课程名称：</label>
+        <input id="name" v-model="selectData.name" type="text"><br>
+        <label for="teacherName">授课教师姓名：</label>
+        <input id="teacherName" v-model="selectData.teacherName" type="text"><br>
+        <div class="button">
+          <button class="l" @click="submitSelectForm">保存</button>
+          <button class="r" @click="cancelForm">取消</button>
+        </div>
+      </form>
+    </div>
     <div v-if="showEditFormFlag" class="form">
       <h2>添加用户</h2>
       <form>
@@ -86,13 +102,14 @@ import {onBeforeMount, reactive, ref} from "vue";
 
 const page = ref(1);
 const pagesize = ref(10);
-const header = ref(['ID', '课程名称', '授课教师ID', '授课教师名称']);
+const header = ref(['ID', '课程名称', '授课教师ID', '授课教师姓名']);
 const coursePage = reactive({
   total: null, records: [],
   keys: ['id', 'name', 'teacherId', 'teacherName']
 });
 const blur = ref(false);
 const showAddFormFlag = ref(false);
+const showSelectFormFlag = ref(false);
 const showEditFormFlag = ref(false);
 const showDelFormFlag = ref(false);
 const delId = ref();
@@ -104,8 +121,13 @@ const formData = reactive({
   teacherId: null
 });
 
+const selectData = reactive({
+  name: '',
+  teacherName: '',
+});
+
 const flash = () => {
-  get(`/course/${page.value}/${pagesize.value}`,
+  post(`/course/${page.value}/${pagesize.value}`,selectData,
       (data, msg) => {
         coursePage.records = data.records;
         coursePage.total = data.total;
@@ -134,6 +156,11 @@ const add = () => {
   showAddFormFlag.value = true;
 }
 
+const select = () => {
+  blur.value = true;
+  showSelectFormFlag.value = true;
+}
+
 const edit = (row) => {
   formData.id = row.id;
   formData.name = row.name;
@@ -157,6 +184,11 @@ const submitAddForm = () => {
   cancelForm();
 }
 
+const submitSelectForm = () => {
+  flash();
+  cancelForm();
+}
+
 const submitEditForm = () => {
   // 提交表单数据
   post('/course/edit', formData, () => {
@@ -177,6 +209,7 @@ const cancelForm = () => {
   showAddFormFlag.value = false;
   showEditFormFlag.value = false;
   showDelFormFlag.value = false;
+  showSelectFormFlag.value = false;
   blur.value = false;
 }
 
