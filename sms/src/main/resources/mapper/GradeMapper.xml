@@ -22,5 +22,11 @@
                  join course c on grade.course_id = c.id
         where grade.student_id = ${id}
           and grade.deleted = 0
+        <if test="gradeSelectDto.teacherName != null and gradeSelectDto.teacherName != ''">
+            and u.name like '%${gradeSelectDto.teacherName}%'
+        </if>
+        <if test="gradeSelectDto.courseName != null and gradeSelectDto.courseName != ''">
+            and c.name like '%${gradeSelectDto.courseName}%'
+        </if>
     </select>
 </mapper>

@@ -92,6 +92,13 @@
         </div>
       </form>
     </div>
+    <div v-if="showDelFormFlag" class="form">
+      <h2>确定要删除该用户吗？</h2>
+      <div class="button">
+        <button class="l" @click="confirmDel">确定</button>
+        <button class="r" @click="cancelForm">取消</button>
+      </div>
+    </div>
     <!-- 背景模糊层 -->
     <div :class="{ 'blur-background': blur === true }"></div>
   </div>

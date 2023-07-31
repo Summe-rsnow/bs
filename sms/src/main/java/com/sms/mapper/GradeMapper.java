@@ -13,5 +13,5 @@ import org.apache.ibatis.annotations.Param;
 public interface GradeMapper extends BaseMapper<Grade> {
     Page<GradeVo> selectTeacherPage(@Param("page") Page<GradeVo> page, @Param("id") Long id, @Param("gradeSelectDto") GradeSelectDto gradeSelectDto);
 
-    Page<GradeVo> selectStudentPage(@Param("page") Page<GradeVo> gradePage, @Param("id") Long id);
+    Page<GradeVo> selectStudentPage(@Param("page") Page<GradeVo> gradePage, @Param("id") Long id, @Param("gradeSelectDto") GradeSelectDto gradeSelectDto);
 }

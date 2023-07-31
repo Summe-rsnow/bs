@@ -40,6 +40,10 @@ const routes = [
                 path: '/select_course',
                 component: () => import('../views/SelectCourse.vue')
             },
+            {
+                path: '/teacher_manager',
+                component: () => import('../views/TeacherManager.vue')
+            },
         ]
     },
 

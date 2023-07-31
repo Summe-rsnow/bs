@@ -1,3 +1,5 @@
+@import "./button.less";
+
 .container {
   position: fixed;
   left: 18%;
@@ -16,6 +18,22 @@
     }
 
     .table {
+      button {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 4px 10px 8px 4px;
+        border-style: none;
+        border-radius: 8px;
+        cursor: pointer;
+
+        img {
+          height: 15px;
+          width: 15px;
+          margin-right: 4px;
+        }
+      }
+
       table {
         box-shadow: 14px 14px 40px #343a40;
         border-collapse: collapse;
@@ -52,12 +70,85 @@
       }
     }
   }
-}
 
-button {
-  box-shadow: 4px 3px 6px #343a40;
+  .form {
+    width: 400px;
+    border-radius: 8px;
+    background-color: rgb(255, 255, 255);
+    color: #000;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    z-index: 2;
 
-  &:active {
-    box-shadow: 4px 3px 6px #343a40 inset;
+    label {
+      display: block;
+      font-size: 17px;
+      font-weight: bold;
+      margin: 5px 0;
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 0 5px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    select {
+      min-width: 16%;
+      padding: 10px;
+      margin: 0 5px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .button {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 15px;
+      }
+
+      .l {
+        background-color: #63e6be;
+
+        &:hover {
+          background-color: #4fcfa9;
+        }
+      }
+
+      .r {
+        background-color: #ffa8a8;
+
+        &:hover {
+          background-color: #dd8181;
+        }
+      }
+    }
+  }
+
+  .blur-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    z-index: 1;
   }
 }
+

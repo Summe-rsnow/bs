@@ -119,6 +119,7 @@ public class UserController {
         if (!userService.isAdmin()) {
             return Result.success("当前用户没有该操作权限");
         }
-        return Result.success(userService.getVoPage(page, pagesize, userSelectDto));
+        Page<UserVo> voPage = userService.getVoPage(page, pagesize, userSelectDto);
+        return Result.success(voPage);
     }
 }

@@ -18,9 +18,9 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
     GradeMapper gradeMapper;
 
     @Override
-    public Page<GradeVo> getVoPageByStudentId(Long id, Integer page, Integer pagesize) {
+    public Page<GradeVo> getVoPageByStudentId(Long id, Integer page, Integer pagesize, GradeSelectDto gradeSelectDto) {
         Page<GradeVo> gradePage = new Page<>(page, pagesize);
-        return gradeMapper.selectStudentPage(gradePage, id);
+        return gradeMapper.selectStudentPage(gradePage, id, gradeSelectDto);
     }
 
     @Override

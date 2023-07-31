@@ -3,6 +3,7 @@
     <div class="tablecontainer">
       <h1 class="title">查询学生</h1>
       <div class="table">
+        <button class="select" @click="select"><img alt="" src="../assets/icons/search.svg">查询</button>
         <table>
           <thead>
           <tr>
@@ -26,13 +27,35 @@
         </div>
       </div>
     </div>
+    <div v-if="showSelectFormFlag" class="form">
+      <h2>条件查询</h2>
+      <form>
+        <label for="name">姓名：</label>
+        <input id="name" v-model="selectData.name" type="text"><br>
+        <label for="gender">性别：</label>
+        <select id="gender" v-model="selectData.gender">
+          <option value=""></option>
+          <option value="男">男</option>
+          <option value="女">女</option>
+        </select><br>
+
+        <div class="button">
+          <button class="l" @click="submitSelectForm">保存</button>
+          <button class="r" @click="cancelForm">取消</button>
+        </div>
+      </form>
+    </div>
+    <!-- 背景模糊层 -->
+    <div :class="{ 'blur-background': blur === true }"></div>
   </div>
 </template>
 
 <script setup>
-import {get} from "../net/index.js";
 import {onBeforeMount, reactive, ref} from "vue";
+import {post} from "../net/index.js";
 
+const blur = ref(false);
+const showSelectFormFlag = ref(false);
 const page = ref(1);
 const pagesize = ref(10);
 const header = ref(['ID', '用户名', '姓名', '邮箱', '性别', '年龄', '手机号码']);
@@ -41,8 +64,14 @@ const studentPage = reactive({
   keys: ['id', 'username', 'name', 'email', 'gender', 'age', 'phone']
 });
 
+//创建新的响应式对象来保存条件查询数据
+const selectData = reactive({
+  name: '',
+  gender: '',
+});
+
 const flash = () => {
-  get(`/grade/student/${page.value}/${pagesize.value}`,
+  post(`/grade/student/${page.value}/${pagesize.value}`,selectData,
       (data, msg) => {
         studentPage.records = data.records;
         studentPage.total = data.total;
@@ -65,6 +94,21 @@ const prevPage = () => {
   page.value--;
   flash();
 };
+
+const select = () => {
+  blur.value = true;
+  showSelectFormFlag.value = true;
+}
+
+const submitSelectForm = () => {
+  flash();
+  cancelForm();
+}
+
+const cancelForm = () => {
+  showSelectFormFlag.value = false;
+  blur.value = false;
+}
 </script>
 
 <style lang="less" scoped>

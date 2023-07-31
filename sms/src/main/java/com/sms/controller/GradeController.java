@@ -1,14 +1,13 @@
 package com.sms.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sms.common.BaseContext;
 import com.sms.common.Result;
 import com.sms.dto.CourseSelectDto;
 import com.sms.dto.GradeSelectDto;
+import com.sms.dto.UserSelectDto;
 import com.sms.entity.Grade;
-import com.sms.entity.User;
 import com.sms.service.CourseService;
 import com.sms.service.GradeService;
 import com.sms.service.UserService;
@@ -66,11 +65,11 @@ public class GradeController {
 
     //学生查询自己的成绩
     @PostMapping("/{page}/{pagesize}")
-    public Result<Page<GradeVo>> getGradePageByStudentId(@PathVariable Integer page, @PathVariable Integer pagesize) {
+    public Result<Page<GradeVo>> getGradePageByStudentId(@PathVariable Integer page, @PathVariable Integer pagesize, @RequestBody GradeSelectDto gradeSelectDto) {
         if (!userService.isStudent()) {
             return Result.success("当前用户没有该操作权限");
         }
-        Page<GradeVo> gradePage = gradeService.getVoPageByStudentId(BaseContext.getCurrentId(), page, pagesize);
+        Page<GradeVo> gradePage = gradeService.getVoPageByStudentId(BaseContext.getCurrentId(), page, pagesize,gradeSelectDto);
         return Result.success(gradePage);
     }
 
@@ -86,24 +85,23 @@ public class GradeController {
 
     //教师查询自己教的学生的信息
     @PostMapping("/student/{page}/{pagesize}")
-    public Result<Page<User>> studentPage(@PathVariable Integer page, @PathVariable Integer pagesize) {
+    public Result<Page<UserVo>> studentPage(@PathVariable Integer page, @PathVariable Integer pagesize,@RequestBody UserSelectDto userSelectDto) {
         if (!userService.isTeacher()) {
             return Result.success("当前用户没有该操作权限");
         }
-        Page<User> userPage = new Page<>(page, pagesize);
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getUserGrant, 2);
-        return Result.success(userService.page(userPage, wrapper));
+        userSelectDto.setUserGrant(2);
+        Page<UserVo> voPage = userService.getVoPage(page, pagesize, userSelectDto);
+        return Result.success(voPage);
     }
 
     //教师查询自己的课程的信息
     @PostMapping("/course/{page}/{pagesize}")
-    public Result<Page<CourseVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize) {
+    public Result<Page<CourseVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize,@RequestBody CourseSelectDto courseSelectDto) {
         if (!userService.isTeacher()) {
             return Result.success("当前用户没有该操作权限");
         }
         Long id = BaseContext.getCurrentId();
-        Page<CourseVo> voPage = courseService.getVoPage(page, pagesize, id, new CourseSelectDto());
+        Page<CourseVo> voPage = courseService.getVoPage(page, pagesize, id, courseSelectDto);
         return Result.success(voPage);
     }
 }
