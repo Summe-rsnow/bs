@@ -9,7 +9,7 @@ import com.sms.vo.CourseVo;
 
 public interface CourseService extends IService<Course> {
 
-    Page<CourseVo> getVoPage(Integer page, Integer pagesize, CourseSelectDto courseSelectDto);
+    Page<CourseVo> getVoPage(Integer page, Integer pagesize, Long id, CourseSelectDto courseSelectDto);
 
     Result add(Course course);
 }

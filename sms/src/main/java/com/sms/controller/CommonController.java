@@ -56,7 +56,7 @@ public class CommonController {
     }
 
     //头像下载接口
-    @PostMapping  ("/avatar/download/{id}")
+    @PostMapping("/avatar/download/{id}")
     public void avatar(HttpServletResponse response, @PathVariable long id) throws IOException {
         User user = userService.getById(id);
         String userAvatar = user.getAvatar();
@@ -76,7 +76,7 @@ public class CommonController {
     }
 
     //验证码返回接口
-    @GetMapping ("/vcode")
+    @GetMapping("/vcode")
     public void vcode(HttpServletResponse response) throws IOException {
         //定义图形验证码的长，宽和长度
         ValidateCodePicUtils.ValidateCodePic validateCodePic = ValidateCodePicUtils.create(140, 37, 4);

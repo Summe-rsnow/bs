@@ -1,15 +1,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sms.mapper.GradeMapper">
-    <select id="selectTeacherPage" parameterType="long" resultType="com.sms.vo.GradeVo">
+    <select id="selectTeacherPage" resultType="com.sms.vo.GradeVo">
         select grade.id, student_id, score, u.name as studentName, c.name as courseName
         from grade
-                 join user u on grade.student_id = u.id
-                 join course c on grade.course_id = c.id
+        join user u on grade.student_id = u.id
+        join course c on grade.course_id = c.id
         where grade.teacher_id = ${id}
-          and grade.deleted = 0
+        and grade.deleted = 0
+        <if test="gradeSelectDto.studentName != null and gradeSelectDto.studentName != ''">
+            and u.name like '%${gradeSelectDto.studentName}%'
+        </if>
+        <if test="gradeSelectDto.courseName != null and gradeSelectDto.courseName != ''">
+            and c.name like '%${gradeSelectDto.courseName}%'
+        </if>
     </select>
-    <select id="selectStudentPage" parameterType="long" resultType="com.sms.vo.GradeVo">
+    <select id="selectStudentPage" resultType="com.sms.vo.GradeVo">
         select grade.id, grade.teacher_id, score, u.name as teacherName, c.name as courseName
         from grade
                  join user u on grade.teacher_id = u.id

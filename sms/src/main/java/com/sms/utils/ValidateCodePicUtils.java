@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class ValidateCodePicUtils {
-    private static Color getRandomColor(){
+    private static Color getRandomColor() {
         return new Color(RandomUtil.randomInt(20, 130), RandomUtil.randomInt(20, 130), RandomUtil.randomInt(20, 130));
     }
 

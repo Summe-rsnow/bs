@@ -98,7 +98,7 @@ import Cropper from "vue3-cropper";
 import 'vue3-cropper/lib/vue3-cropper.css';
 import {reactive, ref} from "vue";
 import {useUserStore} from "../stores/index.js";
-import {uploadAvatar, post, downloadAvatar} from '../net/index.js';
+import {downloadAvatar, post, uploadAvatar} from '../net/index.js';
 import router from "../router/index.js";
 
 const userStore = useUserStore();

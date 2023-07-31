@@ -10,11 +10,15 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Configuration
 @Slf4j
 public class WebMvcConfig extends WebMvcConfigurationSupport {
+    @Resource
+    LoginCheckInterceptor loginCheckInterceptor;
+
     @Override
     protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         log.info("扩展消息转换器");
@@ -42,7 +46,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginCheckInterceptor())
+        registry.addInterceptor(loginCheckInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/user/login", "/user/logout", "/common/vcode");
     }

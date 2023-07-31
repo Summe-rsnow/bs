@@ -214,7 +214,7 @@ const selectData = reactive({
 });
 
 const flash = () => {
-  post(`/user/${page.value}/${pagesize.value}`,selectData,
+  post(`/user/${page.value}/${pagesize.value}`, selectData,
       (data, msg) => {
         userPage.records = data.records;
         userPage.total = data.total;

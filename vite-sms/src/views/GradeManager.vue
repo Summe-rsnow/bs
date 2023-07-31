@@ -3,7 +3,10 @@
     <div class="tablecontainer">
       <h1 class="title">修改成绩</h1>
       <div class="table">
-        <button class="add" @click="add"><img alt="" src="../assets/icons/add.svg">新增</button>
+        <div class="function">
+          <button class="add" @click="add"><img alt="" src="../assets/icons/add.svg">新增</button>
+          <button class="select" @click="select"><img alt="" src="../assets/icons/search.svg">查询</button>
+        </div>
         <table>
           <thead>
           <tr>
@@ -55,6 +58,19 @@
         </div>
       </form>
     </div>
+    <div v-if="showSelectFormFlag" class="form">
+      <h2>条件查询</h2>
+      <form>
+        <label for="studentName">学生姓名：</label>
+        <input id="studentName" v-model="selectData.studentName" type="text"><br>
+        <label for="courseName">课程名称：</label>
+        <input id="courseName" v-model="selectData.courseName" type="text"><br>
+        <div class="button">
+          <button class="l" @click="submitSelectForm">保存</button>
+          <button class="r" @click="cancelForm">取消</button>
+        </div>
+      </form>
+    </div>
     <div v-if="showEditFormFlag" class="form">
       <h2>查询学生</h2>
       <form>
@@ -82,19 +98,20 @@
 </template>
 <script setup>
 import {onBeforeMount, reactive, ref} from "vue";
-import {del, get, post} from "../net/index.js";
+import {del, post} from "../net/index.js";
 import {useUserStore} from "../stores/index.js";
 
 const userStore = useUserStore();
 const page = ref(1);
 const pagesize = ref(10);
-const header = ref(['ID', '学生ID', '学生名', '课程名', '分数']);
+const header = ref(['ID', '学生ID', '学生姓名', '课程名称', '分数']);
 const userPage = reactive({
   total: null, records: [],
   keys: ['id', 'studentId', 'studentName', 'courseName', 'score']
 });
 const blur = ref(false);
 const showAddFormFlag = ref(false);
+const showSelectFormFlag = ref(false);
 const showEditFormFlag = ref(false);
 const showDelFormFlag = ref(false);
 const delId = ref();
@@ -107,8 +124,13 @@ const formData = reactive({
   score: null,
 });
 
+const selectData = reactive({
+  studentName: '',
+  courseName: '',
+});
+
 const flash = () => {
-  get(`/grade/change/${page.value}/${pagesize.value}`,
+  post(`/grade/change/${page.value}/${pagesize.value}`, selectData,
       (data, msg) => {
         userPage.records = data.records;
         userPage.total = data.total;
@@ -137,6 +159,11 @@ const add = () => {
   showAddFormFlag.value = true;
 }
 
+const select = () => {
+  blur.value = true;
+  showSelectFormFlag.value = true;
+}
+
 const edit = (row) => {
   formData.studentId = row.studentId;
   formData.courseId = row.courseId;
@@ -161,6 +188,11 @@ const submitAddForm = () => {
   cancelForm();
 }
 
+const submitSelectForm = () => {
+  flash();
+  cancelForm();
+}
+
 const submitEditForm = () => {
   // 提交表单数据
   post('/grade/edit', formData, () => {
@@ -179,14 +211,15 @@ const confirmDel = () => {
 
 const cancelForm = () => {
   showAddFormFlag.value = false;
+  showSelectFormFlag.value = false;
   showEditFormFlag.value = false;
   showDelFormFlag.value = false;
   blur.value = false;
 }
 
 const resetFormData = () => {
-  formData.id = null,
-      formData.studentId = null;
+  formData.id = null;
+  formData.studentId = null;
   formData.courseId = null;
   formData.teacherId = null;
   formData.score = null;
@@ -194,17 +227,21 @@ const resetFormData = () => {
 </script>
 <style lang="less" scoped>
 @import "../assets/css/manager";
+
 table td:nth-child(1),
-table td:nth-child(2){
+table td:nth-child(2) {
   width: 24%;
 }
+
 table td:nth-child(3),
-table td:nth-child(5){
+table td:nth-child(5) {
   width: 11%;
 }
+
 table td:nth-child(4) {
   width: 16%;
 }
+
 table td:nth-child(6) {
   width: 14%;
 }

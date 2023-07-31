@@ -69,6 +69,7 @@ const prevPage = () => {
 
 <style lang="less" scoped>
 @import "../assets/css/select";
+
 table td:nth-child(1),
 table td:nth-child(2),
 table td:nth-child(4),

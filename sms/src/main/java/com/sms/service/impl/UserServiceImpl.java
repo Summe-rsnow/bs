@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sms.common.BaseContext;
 import com.sms.common.Result;
+import com.sms.config.JwtConfig;
 import com.sms.dto.PwdDto;
 import com.sms.dto.UserDto;
 import com.sms.dto.UserSelectDto;
@@ -19,7 +20,6 @@ import com.sms.utils.JwtUtils;
 import com.sms.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -31,10 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     @Resource
     UserMapper userMapper;
-    @Value("${sms.jwt.timeout}")
-    private long timeout;
-    @Value("${sms.jwt.my-secret-key}")
-    private String mySecretKey;
+    @Resource
+    JwtConfig jwtConfig;
 
     @Override
     public Result<UserVo> login(HttpServletRequest request, UserDto userDto) {
@@ -55,7 +53,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         UserVo vo = new UserVo();
         BeanUtils.copyProperties(user, vo);
-        String token = JwtUtils.generateToken(vo.getId(), timeout, mySecretKey);
+        String token = JwtUtils.generateToken(vo.getId(), jwtConfig.getTimeout(), jwtConfig.getMySecretKey());
         vo.setToken(token);
         return Result.success(vo);//返回查到对象（以json格式）
     }
@@ -145,6 +143,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Page<UserVo> getVoPage(Integer page, Integer pagesize, UserSelectDto userSelectDto) {
         Page<UserVo> userVoPage = new Page<>(page, pagesize);
-        return userMapper.selectUserVoPage(userVoPage,userSelectDto);
+        return userMapper.selectUserVoPage(userVoPage, userSelectDto);
     }
 }

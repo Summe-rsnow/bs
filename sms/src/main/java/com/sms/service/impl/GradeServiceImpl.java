@@ -2,6 +2,7 @@ package com.sms.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sms.dto.GradeSelectDto;
 import com.sms.entity.Grade;
 import com.sms.mapper.GradeMapper;
 import com.sms.service.GradeService;
@@ -23,9 +24,9 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
     }
 
     @Override
-    public Page<GradeVo> getVoPageByTeacherId(Long id, Integer page, Integer pagesize) {
-        Page<GradeVo> gradeVOpage = new Page<>(page, pagesize);
-        return gradeMapper.selectTeacherPage(gradeVOpage, id);
+    public Page<GradeVo> getVoPageByTeacherId(Long id, Integer page, Integer pagesize, GradeSelectDto gradeSelectDto) {
+        Page<GradeVo> gradeVopage = new Page<>(page, pagesize);
+        return gradeMapper.selectTeacherPage(gradeVopage, id, gradeSelectDto);
 
     }
 }

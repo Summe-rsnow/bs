@@ -115,10 +115,10 @@ public class UserController {
     }
 
     @PostMapping("/{page}/{pagesize}")
-    public Result<Page<UserVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize,@RequestBody UserSelectDto userSelectDto) {
+    public Result<Page<UserVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize, @RequestBody UserSelectDto userSelectDto) {
         if (!userService.isAdmin()) {
             return Result.success("当前用户没有该操作权限");
         }
-        return Result.success(userService.getVoPage(page, pagesize,userSelectDto));
+        return Result.success(userService.getVoPage(page, pagesize, userSelectDto));
     }
 }

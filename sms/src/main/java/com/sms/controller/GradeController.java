@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sms.common.BaseContext;
 import com.sms.common.Result;
+import com.sms.dto.CourseSelectDto;
+import com.sms.dto.GradeSelectDto;
 import com.sms.entity.Grade;
 import com.sms.entity.User;
 import com.sms.service.CourseService;
@@ -74,11 +76,11 @@ public class GradeController {
 
     //教师查询自己所教学生的成绩信息
     @PostMapping("/change/{page}/{pagesize}")
-    public Result<Page<GradeVo>> changeGradePage(@PathVariable Integer page, @PathVariable Integer pagesize) {
+    public Result<Page<GradeVo>> changeGradePage(@PathVariable Integer page, @PathVariable Integer pagesize, @RequestBody GradeSelectDto gradeSelectDto) {
         if (!userService.isTeacher()) {
             return Result.success("当前用户没有该操作权限");
         }
-        Page<GradeVo> gradePage = gradeService.getVoPageByTeacherId(BaseContext.getCurrentId(), page, pagesize);
+        Page<GradeVo> gradePage = gradeService.getVoPageByTeacherId(BaseContext.getCurrentId(), page, pagesize, gradeSelectDto);
         return Result.success(gradePage);
     }
 
@@ -88,18 +90,20 @@ public class GradeController {
         if (!userService.isTeacher()) {
             return Result.success("当前用户没有该操作权限");
         }
-        Page<User> userPage = new Page<>(page,pagesize);
+        Page<User> userPage = new Page<>(page, pagesize);
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUserGrant, 2);
         return Result.success(userService.page(userPage, wrapper));
     }
 
-    //教师查询自己的课的信息
+    //教师查询自己的课程的信息
     @PostMapping("/course/{page}/{pagesize}")
     public Result<Page<CourseVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize) {
         if (!userService.isTeacher()) {
             return Result.success("当前用户没有该操作权限");
         }
-        return Result.success(courseService.getVoPage(page, pagesize,null));
+        Long id = BaseContext.getCurrentId();
+        Page<CourseVo> voPage = courseService.getVoPage(page, pagesize, id, new CourseSelectDto());
+        return Result.success(voPage);
     }
 }

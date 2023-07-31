@@ -97,7 +97,7 @@
 </template>
 
 <script setup>
-import {del, get, post} from "../net/index.js";
+import {del, post} from "../net/index.js";
 import {onBeforeMount, reactive, ref} from "vue";
 
 const page = ref(1);
@@ -127,7 +127,7 @@ const selectData = reactive({
 });
 
 const flash = () => {
-  post(`/course/${page.value}/${pagesize.value}`,selectData,
+  post(`/course/${page.value}/${pagesize.value}`, selectData,
       (data, msg) => {
         coursePage.records = data.records;
         coursePage.total = data.total;

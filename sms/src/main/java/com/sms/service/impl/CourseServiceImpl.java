@@ -18,11 +18,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     CourseMapper courseMapper;
 
     @Override
-    public Page<CourseVo> getVoPage(Integer page, Integer pagesize, CourseSelectDto courseSelectDto) {
+    public Page<CourseVo> getVoPage(Integer page, Integer pagesize, Long id, CourseSelectDto courseSelectDto) {
 
         Page<CourseVo> courseVoPage = new Page<>(page, pagesize);
 
-        return courseMapper.selectCourseVoPage(courseVoPage, courseSelectDto);
+        return courseMapper.selectCourseVoPage(courseVoPage, id, courseSelectDto);
     }
 
     @Override
