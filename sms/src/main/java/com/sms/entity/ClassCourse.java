@@ -7,19 +7,11 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-/**
- * 对应教师教学生具体课程的表
- * @author sssnow
- */
 @Data
-public class TeacherCourseStudent {
+public class ClassCourse {
     private Long id;
-    private Long courseId;//课程id
-    private String courseName;//课程名称
-    private Long studentId;//学生id
-    private String studentName;//学生姓名
-    private Long teacherId;//教师id
-    private String teacherName;//教师姓名
+    private Long classId;
+    private Long courseId;
 
     @TableLogic
     private Integer deleted;//逻辑删除标志
