@@ -63,7 +63,7 @@ const selectData = reactive({
 });
 
 const flash = () => {
-  post(`/grade/course/${page.value}/${pagesize.value}`,selectData,
+  post(`/grade/course/${page.value}/${pagesize.value}`, selectData,
       (data, msg) => {
         coursePage.records = data.records;
         coursePage.total = data.total;

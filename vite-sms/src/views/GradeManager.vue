@@ -74,18 +74,8 @@
     <div v-if="showEditFormFlag" class="form">
       <h2>查询学生</h2>
       <form>
-        <label for="studentId">学生ID：</label>
-        <!-- 将表单数据绑定到 formData.name -->
-        <input id="studentId" v-model="formData.studentId" type="text"><br>
-
-        <label for="courseId">课程ID：</label>
-        <!-- 将表单数据绑定到 formData.email -->
-        <input id="courseId" v-model="formData.courseId" type="text"><br>
-
         <label for="score">分数：</label>
-        <!-- 将表单数据绑定到 formData.email -->
         <input id="score" v-model="formData.score" type="text"><br>
-
         <div class="button">
           <button class="l" @click="submitEditForm">确认</button>
           <button class="r" @click="cancelForm">取消</button>
@@ -162,6 +152,7 @@ const prevPage = () => {
 };
 
 const add = () => {
+  resetFormData();
   blur.value = true;
   showAddFormFlag.value = true;
 }
@@ -172,8 +163,7 @@ const select = () => {
 }
 
 const edit = (row) => {
-  formData.studentId = row.studentId;
-  formData.courseId = row.courseId;
+  formData.id = row.id;
   formData.score = row.score;
   blur.value = true;
   showEditFormFlag.value = true;

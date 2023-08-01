@@ -33,11 +33,15 @@ mybatis-plus:
 
 sms:
   path: D:\avatar
-  verificationCode: false
+
   jwt:
     my-secret-key: summersnow
     timeout: 86400000 # 1天时间
-
+  code: #验证码服务相关
+    sign-name: 1
+    template-code: 1
+    phone-code: false # 手机验证码开关
+    verification-code: false # 登录验证码开关
 logging:
   level:
     com.baomidou.mybatisplus.extension.plugins: warn

@@ -216,9 +216,6 @@ const submitPwd = () => {
         () => {
           // 更新 userStore 中的数据
           router.push('/');
-        },
-        (msg) => {
-          alert(msg);
         }
     );
   }
@@ -362,7 +359,7 @@ const onCancel = () => {
     width: 400px;
     border-radius: 8px;
     background-color: rgb(255, 255, 255);
-    color: #000;
+    color: #343a40;
     position: fixed;
     top: 50%;
     left: 50%;

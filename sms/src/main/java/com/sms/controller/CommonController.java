@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
@@ -77,10 +78,11 @@ public class CommonController {
 
     //验证码返回接口
     @GetMapping("/vcode")
-    public void vcode(HttpServletResponse response) throws IOException {
+    public void vcode(HttpServletRequest request, HttpServletResponse response) throws IOException {
         //定义图形验证码的长，宽和长度
         ValidateCodePicUtils.ValidateCodePic validateCodePic = ValidateCodePicUtils.create(140, 37, 4);
         String code = validateCodePic.getCode();
+        request.getSession().setAttribute("vcode", code);
         log.info("生成的验证码是：{}", code);
         //输出流，将验证码写回浏览器
         ServletOutputStream servletOutputStream = response.getOutputStream();

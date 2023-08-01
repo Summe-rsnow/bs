@@ -17,7 +17,10 @@ const flash = () => {
 
 <style scoped>
 div {
-  min-height: 100vh;
-//background: linear-gradient(135deg, #3a7bd5, #3a6073); background-image: url("./assets/bg.jpg"); background-size: cover; background-position: center; background-repeat: no-repeat;
+  height: 100vh;
+  background-image: url("./assets/bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 </style>

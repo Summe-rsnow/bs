@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sms.common.BaseContext;
 import com.sms.common.Result;
 import com.sms.dto.CourseSelectDto;
+import com.sms.dto.GradeEditDto;
 import com.sms.dto.GradeSelectDto;
 import com.sms.dto.UserSelectDto;
+import com.sms.entity.Course;
 import com.sms.entity.Grade;
 import com.sms.service.CourseService;
 import com.sms.service.GradeService;
@@ -36,20 +38,28 @@ public class GradeController {
         if (!userService.isTeacher()) {
             return Result.error("当前用户没有该操作权限");
         }
+        LambdaUpdateWrapper<Course> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(Course::getId, grade.getCourseId());
+        Course course = courseService.getOne(wrapper);
+
+        if (!course.getTeacherId().equals(grade.getTeacherId())) {
+            return Result.error("创建的成绩应该为教师自己所授课程的成绩");
+        }
         log.info("新增成绩信息:{}", grade);
         gradeService.save(grade);
-        return Result.success(null, "新增成功");
+        return Result.success("新增成功");
     }
 
+    /**
+     * 成绩修改接口 只能修改成绩的分数
+     */
     @PostMapping("/edit")
-    public Result<UserVo> edit(@RequestBody Grade grade) {
-        log.info("修改信息:{}", grade);
+    public Result<UserVo> edit(@RequestBody GradeEditDto gradeEditDto) {
+        log.info("修改成绩信息:{}", gradeEditDto);
         if (!userService.isTeacher()) {
             return Result.error("当前用户没有该操作权限");
         }
-        LambdaUpdateWrapper<Grade> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(Grade::getId, grade.getId());
-        gradeService.update(grade, wrapper);
+        gradeService.edit(gradeEditDto);
         return Result.success("修改成功");
     }
 
@@ -69,7 +79,7 @@ public class GradeController {
         if (!userService.isStudent()) {
             return Result.success("当前用户没有该操作权限");
         }
-        Page<GradeVo> gradePage = gradeService.getVoPageByStudentId(BaseContext.getCurrentId(), page, pagesize,gradeSelectDto);
+        Page<GradeVo> gradePage = gradeService.getVoPageByStudentId(BaseContext.getCurrentId(), page, pagesize, gradeSelectDto);
         return Result.success(gradePage);
     }
 
@@ -85,7 +95,7 @@ public class GradeController {
 
     //教师查询自己教的学生的信息
     @PostMapping("/student/{page}/{pagesize}")
-    public Result<Page<UserVo>> studentPage(@PathVariable Integer page, @PathVariable Integer pagesize,@RequestBody UserSelectDto userSelectDto) {
+    public Result<Page<UserVo>> studentPage(@PathVariable Integer page, @PathVariable Integer pagesize, @RequestBody UserSelectDto userSelectDto) {
         if (!userService.isTeacher()) {
             return Result.success("当前用户没有该操作权限");
         }
@@ -96,7 +106,7 @@ public class GradeController {
 
     //教师查询自己的课程的信息
     @PostMapping("/course/{page}/{pagesize}")
-    public Result<Page<CourseVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize,@RequestBody CourseSelectDto courseSelectDto) {
+    public Result<Page<CourseVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize, @RequestBody CourseSelectDto courseSelectDto) {
         if (!userService.isTeacher()) {
             return Result.success("当前用户没有该操作权限");
         }

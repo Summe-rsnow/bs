@@ -4,15 +4,19 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sms.common.BaseContext;
 import com.sms.common.Result;
+import com.sms.config.CodeConfig;
 import com.sms.dto.PwdDto;
+import com.sms.dto.PwdForgetDto;
 import com.sms.dto.UserDto;
 import com.sms.dto.UserSelectDto;
 import com.sms.entity.User;
 import com.sms.service.UserService;
+import com.sms.utils.SendPhoneCodeUtils;
+import com.sms.utils.ValidateCodeUtils;
 import com.sms.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -26,14 +30,14 @@ public class UserController {
     @Resource
     UserService userService;
 
-    @Value("${sms.verificationCode}")
-    boolean enableVerificationCode;
+    @Resource
+    CodeConfig codeConfig;
 
     @PostMapping("/login")
     public Result<UserVo> login(HttpServletRequest request, @RequestBody UserDto userDto) {
         log.info("登录学生信息:{}", userDto);
         String vcode = (String) request.getSession().getAttribute("vcode");
-        if (enableVerificationCode) {
+        if (codeConfig.isVerificationCode()) {
             if (userDto.getVerificationCode() == null || !userDto.getVerificationCode().equals(vcode)) {
                 return Result.error("验证码错误，请重试");
             }
@@ -48,9 +52,48 @@ public class UserController {
         return Result.success("退出成功");
     }
 
+    //忘记密码返回手机验证码接口
+    @PostMapping("/phoneCode/{username}")
+    public Result<String> phoneCode(HttpServletRequest request, @PathVariable String username) {
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(User::getUsername, username);
+        User user = userService.getOne(wrapper);
+        if (user == null) {
+            return Result.error("用户名不存在");
+        }
+        String phone = user.getPhone();
+        if (phone == null) {
+            return Result.error("当前用户名未设置手机号码，请联系管理员解决问题");
+        }
+        String code = ValidateCodeUtils.generateNumericCode();
+        log.info("生成的手机验证码为:{}", code);
+        if (codeConfig.isPhoneCode()) {
+            SendPhoneCodeUtils.sendMessage(codeConfig.getSignName(), codeConfig.getTemplateCode(), phone, code);
+        }
+        request.getSession().setAttribute("phoneCode", code);
+        return Result.success("获取验证码成功");
+    }
+
+    //修改密码接口
     @PostMapping("/pwd")
     public Result<String> pwd(@RequestBody PwdDto pwdDto) {
         return userService.resetPassword(pwdDto);
+    }
+
+    //忘记密码修改接口
+    @PostMapping("/pwd/forget")
+    public Result<String> pwdForget(HttpServletRequest request, @RequestBody PwdForgetDto pwdForgetDto) {
+        String phoneCode = (String) request.getSession().getAttribute("phoneCode");
+        if (!phoneCode.equals(pwdForgetDto.getVerificationCode())) {
+            return Result.error("验证码错误，请重试");
+        }
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(User::getUsername, pwdForgetDto.getUsername());
+        User user = userService.getOne(wrapper);
+        String md5Password = DigestUtils.md5DigestAsHex(pwdForgetDto.getNewPwd().getBytes());
+        user.setPassword(md5Password);
+        userService.updateById(user);
+        return Result.success("重置密码成功");
     }
 
     @PostMapping("/add")

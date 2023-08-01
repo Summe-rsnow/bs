@@ -152,6 +152,7 @@ const prevPage = () => {
 };
 
 const add = () => {
+  resetFormData();
   blur.value = true;
   showAddFormFlag.value = true;
 }

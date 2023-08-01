@@ -5,7 +5,7 @@ axios.defaults.baseURL = '/api';
 axios.defaults.withCredentials = true;
 
 const userStore = useUserStore();
-const defaultFailure = (msg) => console.log(msg);
+const defaultFailure = (msg) => alert(msg);
 const defaultError = (error) => console.log(error);
 
 function getToken() {

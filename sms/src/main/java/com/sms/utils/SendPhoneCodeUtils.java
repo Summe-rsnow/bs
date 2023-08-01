@@ -10,7 +10,7 @@ import com.aliyuncs.profile.DefaultProfile;
 /**
  * 短信发送工具类
  */
-public class SMSUtils {
+public class SendPhoneCodeUtils {
 
     /**
      * 发送短信
@@ -18,9 +18,9 @@ public class SMSUtils {
      * @param signName     签名
      * @param templateCode 模板
      * @param phoneNumbers 手机号
-     * @param param        参数
+     * @param code         验证码
      */
-    public static void sendMessage(String signName, String templateCode, String phoneNumbers, String param) {
+    public static void sendMessage(String signName, String templateCode, String phoneNumbers, String code) {
         DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "",
                 "");
         IAcsClient client = new DefaultAcsClient(profile);
@@ -30,7 +30,7 @@ public class SMSUtils {
         request.setPhoneNumbers(phoneNumbers);
         request.setSignName(signName);
         request.setTemplateCode(templateCode);
-        request.setTemplateParam("{\"code\":\"" + param + "\"}");
+        request.setTemplateParam("{\"code\":\"" + code + "\"}");
         try {
             SendSmsResponse response = client.getAcsResponse(request);
             System.out.println("短信发送成功");

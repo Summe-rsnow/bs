@@ -18,10 +18,10 @@
     <select id="selectStudentPage" resultType="com.sms.vo.GradeVo">
         select grade.id, grade.teacher_id, score, u.name as teacherName, c.name as courseName
         from grade
-                 join user u on grade.teacher_id = u.id
-                 join course c on grade.course_id = c.id
+        join user u on grade.teacher_id = u.id
+        join course c on grade.course_id = c.id
         where grade.student_id = ${id}
-          and grade.deleted = 0
+        and grade.deleted = 0
         <if test="gradeSelectDto.teacherName != null and gradeSelectDto.teacherName != ''">
             and u.name like '%${gradeSelectDto.teacherName}%'
         </if>
