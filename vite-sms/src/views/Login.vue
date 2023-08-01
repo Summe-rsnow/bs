@@ -87,13 +87,13 @@ const forgetPwd = () => {
     post('/user/pwd/forget', forgetForm,
         (data, msg) => {
           alert(msg);
+          showForgetFormFlag.value = false;
         },
         (msg) => {
           alert(msg);
         }
     );
   }
-  showForgetFormFlag.value = false;
 }
 
 // 刷新验证码

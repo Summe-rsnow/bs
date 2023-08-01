@@ -6,10 +6,12 @@ import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 短信发送工具类
  */
+@Slf4j
 public class SendPhoneCodeUtils {
 
     /**
@@ -35,7 +37,7 @@ public class SendPhoneCodeUtils {
             SendSmsResponse response = client.getAcsResponse(request);
             System.out.println("短信发送成功");
         } catch (ClientException e) {
-            e.printStackTrace();
+            log.error(String.valueOf(e));
         }
     }
 

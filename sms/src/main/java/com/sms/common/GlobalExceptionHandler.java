@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
             String msg = split[2] + "已存在";
             return Result.error(msg);
         }
-        return Result.error("未知错误");
+        return Result.error("未知错误，请联系管理员解决问题");
     }
 
     @ExceptionHandler(SQLException.class)//处理异常注解
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
             return Result.error(msg);
         }
 
-        return Result.error("未知错误");
+        return Result.error("未知错误，请联系管理员解决问题");
     }
 
     @ExceptionHandler(CustomException.class)//处理异常注解

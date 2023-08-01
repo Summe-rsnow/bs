@@ -25,7 +25,7 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
     GradeMapper gradeMapper;
 
     @Override
-    public Result<UserVo> edit(GradeEditDto gradeEditDto) {
+    public Result<String> edit(GradeEditDto gradeEditDto) {
         log.info("修改成绩信息:{}", gradeEditDto);
         Grade grade = new Grade();
         BeanUtils.copyProperties(gradeEditDto, grade);

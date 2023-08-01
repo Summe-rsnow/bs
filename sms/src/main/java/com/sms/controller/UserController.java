@@ -16,12 +16,14 @@ import com.sms.utils.ValidateCodeUtils;
 import com.sms.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/user")
@@ -29,6 +31,9 @@ import java.util.Objects;
 public class UserController {
     @Resource
     UserService userService;
+
+    @Resource
+    RedisTemplate redisTemplate;
 
     @Resource
     CodeConfig codeConfig;
@@ -54,7 +59,7 @@ public class UserController {
 
     //忘记密码返回手机验证码接口
     @PostMapping("/phoneCode/{username}")
-    public Result<String> phoneCode(HttpServletRequest request, @PathVariable String username) {
+    public Result<String> phoneCode(@PathVariable String username) {
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(User::getUsername, username);
         User user = userService.getOne(wrapper);
@@ -70,7 +75,8 @@ public class UserController {
         if (codeConfig.isPhoneCode()) {
             SendPhoneCodeUtils.sendMessage(codeConfig.getSignName(), codeConfig.getTemplateCode(), phone, code);
         }
-        request.getSession().setAttribute("phoneCode", code);
+        // 向Redis存储验证码和过期时间
+        redisTemplate.boundValueOps("phoneCode:" + username).set(code, 5, TimeUnit.MINUTES);
         return Result.success("获取验证码成功");
     }
 
@@ -82,16 +88,20 @@ public class UserController {
 
     //忘记密码修改接口
     @PostMapping("/pwd/forget")
-    public Result<String> pwdForget(HttpServletRequest request, @RequestBody PwdForgetDto pwdForgetDto) {
-        String phoneCode = (String) request.getSession().getAttribute("phoneCode");
+    public Result<String> pwdForget(@RequestBody PwdForgetDto pwdForgetDto) {
+        String username = pwdForgetDto.getUsername();
+        // 从Redis里获取验证码
+        String phoneCode = (String) redisTemplate.boundValueOps("phoneCode:" + username).get();
         if (!phoneCode.equals(pwdForgetDto.getVerificationCode())) {
-            return Result.error("验证码错误，请重试");
+            return Result.error("验证码错误或已失效，请重试");
         }
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(User::getUsername, pwdForgetDto.getUsername());
+        wrapper.eq(User::getUsername, username);
         User user = userService.getOne(wrapper);
         String md5Password = DigestUtils.md5DigestAsHex(pwdForgetDto.getNewPwd().getBytes());
         user.setPassword(md5Password);
+        //因为还没登录 自动填充需要id 需要手动设置
+        BaseContext.setCurrentId(user.getId());
         userService.updateById(user);
         return Result.success("重置密码成功");
     }

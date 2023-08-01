@@ -11,7 +11,7 @@ import com.sms.vo.UserVo;
 
 public interface GradeService extends IService<Grade> {
 
-    Result<UserVo> edit(GradeEditDto gradeEditDto);
+    Result<String> edit(GradeEditDto gradeEditDto);
 
     //根据学生id查询成绩信息
     Page<GradeVo> getVoPageByStudentId(Long id, Integer page, Integer pagesize, GradeSelectDto gradeSelectDto);

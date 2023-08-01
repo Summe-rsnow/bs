@@ -54,13 +54,12 @@ public class GradeController {
      * 成绩修改接口 只能修改成绩的分数
      */
     @PostMapping("/edit")
-    public Result<UserVo> edit(@RequestBody GradeEditDto gradeEditDto) {
+    public Result<String> edit(@RequestBody GradeEditDto gradeEditDto) {
         log.info("修改成绩信息:{}", gradeEditDto);
         if (!userService.isTeacher()) {
             return Result.error("当前用户没有该操作权限");
         }
-        gradeService.edit(gradeEditDto);
-        return Result.success("修改成功");
+        return gradeService.edit(gradeEditDto);
     }
 
     @PostMapping("/del/{id}")
