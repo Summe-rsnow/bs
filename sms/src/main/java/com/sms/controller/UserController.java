@@ -58,7 +58,7 @@ public class UserController {
     }
 
     //忘记密码返回手机验证码接口
-    @PostMapping("/phoneCode/{username}")
+    @PostMapping("/phone_code/{username}")
     public Result<String> phoneCode(@PathVariable String username) {
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(User::getUsername, username);

@@ -2,25 +2,20 @@ server:
   port: 8081
 
 spring:
-  application:
-    name: sms
-
   main:
     banner-mode: off
-
   servlet:
     multipart:
       max-file-size: 10MB  # 设置上传文件的最大大小，单位为字节
       max-request-size: 5MB  # 设置请求数据的最大大小，单位为字节
-
-
+  application:
+    name: sms
   datasource:
     url: jdbc:mysql://localhost:3306/sms?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
     hikari:
       username: root
       password: 123456
-      driver-class-name: com.mysql.cj.jdbc.Drive
-
+      driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     host: localhost
     port: 6379
@@ -33,23 +28,19 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     #开启日志
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
   global-config:
     db-config:
       id-type: ASSIGN_ID
       logic-delete-value: 1 # 逻辑已删除值(默认为 1)
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
     banner: false
-
   mapper-locations: classpath:mapper/*.xml
 
 sms:
   path: D:\avatar
-
   jwt:
     my-secret-key: summersnow
     timeout: 86400000 # 1天时间
-
   code: #验证码服务相关
     sign-name: 学生成绩管理系统服务
     template-code: SMS_462235532

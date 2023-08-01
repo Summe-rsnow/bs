@@ -7,7 +7,6 @@ import com.sms.dto.GradeEditDto;
 import com.sms.dto.GradeSelectDto;
 import com.sms.entity.Grade;
 import com.sms.vo.GradeVo;
-import com.sms.vo.UserVo;
 
 public interface GradeService extends IService<Grade> {
 

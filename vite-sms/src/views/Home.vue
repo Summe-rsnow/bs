@@ -50,6 +50,7 @@ const menuItems = reactive([
   {id: '5', label: '课程管理', router: '/course_manager', grand: [0]},
   {id: '6', label: '查询学生', router: '/select_student', grand: [1]},
   {id: '7', label: '查询课程', router: '/select_course', grand: [1]},
+  {id: '8', label: '数据可视化', router: '/admin_data', grand: [0]},
 ])
 
 const selectMenuItem = (item) => {

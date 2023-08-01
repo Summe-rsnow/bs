@@ -39,6 +39,10 @@ const routes = [
             {
                 path: '/select_course',
                 component: () => import('../views/SelectCourse.vue')
+            },
+            {
+                path: '/admin_data',
+                component: () => import('../views/AdminData.vue')
             }
         ]
     },

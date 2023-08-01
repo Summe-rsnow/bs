@@ -2,6 +2,7 @@ package com.sms.controller;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.sms.common.BaseContext;
 import com.sms.common.Result;
 import com.sms.entity.User;
@@ -9,6 +10,7 @@ import com.sms.service.UserService;
 import com.sms.utils.ValidateCodePicUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -88,5 +91,20 @@ public class CommonController {
         ServletOutputStream servletOutputStream = response.getOutputStream();
         response.setContentType("image/jpeg");
         validateCodePic.write(servletOutputStream);
+    }
+
+    @PostMapping("/data/mf_ratio")
+    public Result<Map<String, Long>> MFRatio() {
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+        Long total = userService.count(wrapper);
+        wrapper.eq(User::getGender, "男");
+        Long male = userService.count(wrapper);
+        Long female = total - male;
+        Map<String, Long> maps = Map.of(
+                "total", total,
+                "male", male,
+                "female", female
+        );
+        return Result.success(maps);
     }
 }
