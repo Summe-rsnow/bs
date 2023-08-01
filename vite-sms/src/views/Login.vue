@@ -23,7 +23,7 @@
       </div>
     </div>
     <div v-else class="forget-password-form">
-      <h2>输入需要找回密码的账号</h2>
+      <h2>找回密码</h2>
       <input v-model="forgetForm.username" placeholder="账号" type="text">
       <input v-model="forgetForm.newPwd" placeholder="新密码" type="password">
       <input v-model="forgetForm.confirmPwd" placeholder="确定密码" type="password">

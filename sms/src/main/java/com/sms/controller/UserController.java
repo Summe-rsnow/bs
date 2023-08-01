@@ -16,6 +16,7 @@ import com.sms.utils.ValidateCodeUtils;
 import com.sms.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
@@ -107,12 +108,14 @@ public class UserController {
     }
 
     @PostMapping("/add")
+    @CacheEvict(cacheNames = "UserVisualization", allEntries = true)
     public Result<String> add(@RequestBody User user) {
         return userService.addUser(user);
     }
 
     //管理员修改成员的信息
     @PostMapping("/edit")
+    @CacheEvict(cacheNames = "UserVisualization", allEntries = true)
     public Result<UserVo> edit(@RequestBody User user) {
         //不允许修改权限
         user.setUserGrant(null);
@@ -128,6 +131,7 @@ public class UserController {
 
     //个人修改自己信息
     @PostMapping("/self/edit")
+    @CacheEvict(cacheNames = "UserVisualization", allEntries = true)
     public Result<UserVo> editInfo(@RequestBody User user) {
         log.info("修改信息:{}", user);
         log.info("登录用户id:{}", BaseContext.getCurrentId());
@@ -158,6 +162,7 @@ public class UserController {
     }
 
     @PostMapping("/del/{id}")
+    @CacheEvict(cacheNames = "UserVisualization", allEntries = true)
     public Result<String> delUser(@PathVariable(value = "id") Long id) {
         log.info("删除用户id:{}", id);
         if (!userService.isAdmin()) {

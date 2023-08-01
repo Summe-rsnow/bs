@@ -10,8 +10,8 @@ export default {
   props: {
     data: {
       type: Array, // 指定 data 属性的类型为数组
-      default: () => [], // 指定 data 属性的默认值为一个空数组
     },
+    title: ''
   },
   computed: {
     option() {
@@ -26,7 +26,7 @@ export default {
         },
         series: [
           {
-            name: 'Access From',
+            name: this.title,
             type: 'pie',
             radius: ['40%', '70%'],
             avoidLabelOverlap: false,
@@ -55,7 +55,7 @@ export default {
 
 <style scoped>
 .echarts {
-  height: 500px;
-  width: 50%;
+  height: 400px;
+  width: 400px;
 }
 </style>

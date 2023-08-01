@@ -11,7 +11,7 @@ const pinia = createPinia();
 
 app.use(router);
 app.use(pinia);
-app.component('ECharts',ECharts);
+app.component('ECharts', ECharts);
 
 app.mount('#app');
 

@@ -17,6 +17,7 @@ import com.sms.vo.CourseVo;
 import com.sms.vo.GradeVo;
 import com.sms.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -34,6 +35,7 @@ public class GradeController {
     UserService userService;
 
     @PostMapping("/add")
+    @CacheEvict(cacheNames = "GradeVisualization", allEntries = true)
     public Result<String> insert(@RequestBody Grade grade) {
         if (!userService.isTeacher()) {
             return Result.error("当前用户没有该操作权限");
@@ -54,6 +56,7 @@ public class GradeController {
      * 成绩修改接口 只能修改成绩的分数
      */
     @PostMapping("/edit")
+    @CacheEvict(cacheNames = "GradeVisualization", allEntries = true)
     public Result<String> edit(@RequestBody GradeEditDto gradeEditDto) {
         log.info("修改成绩信息:{}", gradeEditDto);
         if (!userService.isTeacher()) {
@@ -63,6 +66,7 @@ public class GradeController {
     }
 
     @PostMapping("/del/{id}")
+    @CacheEvict(cacheNames = "GradeVisualization", allEntries = true)
     public Result<String> editInfo(@PathVariable(value = "id") Long id) {
         log.info("删除成绩id:{}", id);
         if (!userService.isTeacher()) {
@@ -92,7 +96,7 @@ public class GradeController {
         return Result.success(gradePage);
     }
 
-    //教师查询自己教的学生的信息
+    //教师查询学生的信息
     @PostMapping("/student/{page}/{pagesize}")
     public Result<Page<UserVo>> studentPage(@PathVariable Integer page, @PathVariable Integer pagesize, @RequestBody UserSelectDto userSelectDto) {
         if (!userService.isTeacher()) {

@@ -5,7 +5,10 @@ import cn.hutool.core.io.IoUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.sms.common.BaseContext;
 import com.sms.common.Result;
+import com.sms.common.VisualizationData;
+import com.sms.entity.Grade;
 import com.sms.entity.User;
+import com.sms.service.GradeService;
 import com.sms.service.UserService;
 import com.sms.utils.ValidateCodePicUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -29,6 +32,9 @@ import java.util.Map;
 public class CommonController {
     @Resource
     UserService userService;
+
+    @Resource
+    GradeService gradeService;
 
     @Value("${sms.path}")
     private String basePath;
@@ -93,18 +99,96 @@ public class CommonController {
         validateCodePic.write(servletOutputStream);
     }
 
-    @PostMapping("/data/mf_ratio")
-    public Result<Map<String, Long>> MFRatio() {
+    /**
+     * 男女比率可视化数据查询接口，使用缓存功能
+     *
+     * @return
+     */
+    @PostMapping("/data/user/mf_ratio")
+    @Cacheable(cacheNames = "UserVisualization", key = "'mfRatio'")
+    public Result<List<VisualizationData>> mfRatio() {
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+
         Long total = userService.count(wrapper);
+
         wrapper.eq(User::getGender, "男");
         Long male = userService.count(wrapper);
-        Long female = total - male;
-        Map<String, Long> maps = Map.of(
-                "total", total,
-                "male", male,
-                "female", female
-        );
-        return Result.success(maps);
+
+        wrapper.clear();
+        wrapper.eq(User::getGender, "女");
+        Long female = userService.count(wrapper);
+
+        Long undefined = total - male - female;
+
+        List<VisualizationData> list = List.of(
+                new VisualizationData(undefined, "未设定"),
+                new VisualizationData(male, "男"),
+                new VisualizationData(female, "女"));
+        return Result.success(list);
+    }
+
+    /**
+     * 用户权限比率可视化数据查询接口，使用缓存功能
+     *
+     * @return
+     */
+    @PostMapping("/data/user/grant_ratio")
+    @Cacheable(cacheNames = "UserVisualization", key = "'grantRatio'")
+    public Result<List<VisualizationData>> grantRatio() {
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+
+        wrapper.eq(User::getUserGrant, 0);
+        Long admin = userService.count(wrapper);
+
+        wrapper.clear();
+        wrapper.eq(User::getUserGrant, 1);
+        Long teacher = userService.count(wrapper);
+
+        wrapper.clear();
+        wrapper.eq(User::getUserGrant, 2);
+        Long student = userService.count(wrapper);
+
+        List<VisualizationData> list = List.of(
+                new VisualizationData(admin, "管理员"),
+                new VisualizationData(teacher, "教师"),
+                new VisualizationData(student, "学生"));
+        return Result.success(list);
+    }
+
+    /**
+     * 成绩分布可视化数据查询接口，使用缓存功能
+     *
+     * @return
+     */
+    @PostMapping("/data/grade/grade_distribution")
+    @Cacheable(cacheNames = "GradeVisualization", key = "'gradeDistribution'")
+    public Result<List<VisualizationData>> gradeDistribution() {
+        LambdaUpdateWrapper<Grade> wrapper = new LambdaUpdateWrapper<>();
+        // 查询成绩在 0-60 范围内的数量，并命名为 gradeA
+        wrapper.between(Grade::getScore, 0, 60);
+        Long gradeA = gradeService.count(wrapper);
+        // 查询成绩在 61-70 范围内的数量，并命名为 gradeB
+        wrapper.clear();
+        wrapper.between(Grade::getScore, 61, 70);
+        Long gradeB = gradeService.count(wrapper);
+        // 查询成绩在 71-80 范围内的数量，并命名为 gradeC
+        wrapper.clear();
+        wrapper.between(Grade::getScore, 71, 80);
+        Long gradeC = gradeService.count(wrapper);
+        // 查询成绩在 81-90 范围内的数量，并命名为 gradeD
+        wrapper.clear();
+        wrapper.between(Grade::getScore, 81, 90);
+        Long gradeD = gradeService.count(wrapper);
+        // 查询成绩在 91-100 范围内的数量，并命名为 gradeE
+        wrapper.clear();
+        wrapper.between(Grade::getScore, 91, 100);
+        Long gradeE = gradeService.count(wrapper);
+        List<VisualizationData> list = List.of(
+                new VisualizationData(gradeA, "60以下"),
+                new VisualizationData(gradeB, "61-70"),
+                new VisualizationData(gradeC, "71-80"),
+                new VisualizationData(gradeD, "81-90"),
+                new VisualizationData(gradeE, "91-100"));
+        return Result.success(list);
     }
 }
