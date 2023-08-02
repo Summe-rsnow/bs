@@ -50,7 +50,21 @@ public class CommonController {
         response.setDateHeader("Expires", 0);
     }
 
-    //头像上传接口
+    private void saveAvatar(MultipartFile file, String path, String fileName) throws IOException {
+        //此方法创建文件时，会自动创建父级文件夹
+        File touch = FileUtil.touch(path);
+        //将图片写入文件中
+        file.transferTo(touch);
+        log.info("已存储文件{}至{}", fileName, basePath);
+    }
+
+    /**
+     * 头像上传接口
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/avatar/upload")
     public Result<String> upload(MultipartFile file) throws IOException {
         //获取文件原始文件名,并获文件后缀
@@ -61,15 +75,13 @@ public class CommonController {
         return Result.success(fileName);
     }
 
-    private void saveAvatar(MultipartFile file, String path, String fileName) throws IOException {
-        //此方法创建文件时，会自动创建父级文件夹
-        File touch = FileUtil.touch(path);
-        //将图片写入文件中
-        file.transferTo(touch);
-        log.info("已存储文件{}至{}", fileName, basePath);
-    }
-
-    //头像下载接口
+    /**
+     * 头像的下载接口
+     *
+     * @param response
+     * @param id
+     * @throws IOException
+     */
     @PostMapping("/avatar/download/{id}")
     public void avatar(HttpServletResponse response, @PathVariable long id) throws IOException {
         User user = userService.getById(id);
@@ -89,7 +101,13 @@ public class CommonController {
         IoUtil.write(servletOutputStream, true, bytes);
     }
 
-    //验证码返回接口
+    /**
+     * 获取登录验证码的接口
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     @GetMapping("/vcode")
     public void vcode(HttpServletRequest request, HttpServletResponse response) throws IOException {
         //定义图形验证码的长，宽和长度
@@ -111,6 +129,9 @@ public class CommonController {
     @PostMapping("/data/user/mf_ratio")
     @Cacheable(cacheNames = "UserVisualization", key = "'mfRatio'")
     public Result<List<VisualizationData>> mfRatio() {
+        if (!userService.isAdmin()) {
+            return Result.error("当前用户没有该操作权限");
+        }
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
 
         Long total = userService.count(wrapper);
@@ -139,6 +160,9 @@ public class CommonController {
     @PostMapping("/data/user/grant_ratio")
     @Cacheable(cacheNames = "UserVisualization", key = "'grantRatio'")
     public Result<List<VisualizationData>> grantRatio() {
+        if (!userService.isAdmin()) {
+            return Result.error("当前用户没有该操作权限");
+        }
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
 
         wrapper.eq(User::getUserGrant, 0);
@@ -167,6 +191,9 @@ public class CommonController {
     @PostMapping("/data/grade/grade_distribution")
     @Cacheable(cacheNames = "GradeVisualization", key = "'gradeDistribution'")
     public Result<List<VisualizationData>> gradeDistribution() {
+        if (!userService.isAdmin()) {
+            return Result.error("当前用户没有该操作权限");
+        }
         LambdaUpdateWrapper<Grade> wrapper = new LambdaUpdateWrapper<>();
         // 查询成绩在 0-60 范围内的数量，并命名为 gradeA
         wrapper.between(Grade::getScore, 0, 60);
@@ -204,6 +231,9 @@ public class CommonController {
     @PostMapping("/data/course/count_ranking")
     @Cacheable(cacheNames = "CourseVisualization", key = "'countRanking'")
     public Result<List<VisualizationData>> countRanking() {
+        if (!userService.isAdmin()) {
+            return Result.error("当前用户没有该操作权限");
+        }
         List<VisualizationData> list = courseService.courseCountRanking();
         return Result.success(list);
     }

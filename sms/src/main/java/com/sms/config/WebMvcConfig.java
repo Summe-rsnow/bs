@@ -48,6 +48,6 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginCheckInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/login", "/user/logout", "/user/phone_code/*", "/user/pwd/forget", "/common/vcode");
+                .excludePathPatterns("/user/login", "/user/logout", "/user/self/info", "/user/phone_code/*", "/user/pwd/forget", "/common/vcode");
     }
 }

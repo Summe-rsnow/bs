@@ -4,15 +4,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sms.common.Result;
 import com.sms.dto.PwdDto;
-import com.sms.dto.UserDto;
+import com.sms.dto.UserLoginDto;
 import com.sms.dto.UserSelectDto;
 import com.sms.entity.User;
-import com.sms.vo.UserVo;
+import com.sms.vo.UseVo;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public interface UserService extends IService<User> {
-    Result<UserVo> login(HttpServletRequest request, UserDto userDto);
+    Result<UseVo> login(HttpServletResponse response, UserLoginDto userLoginDto);
 
     Result<String> resetPassword(PwdDto pwdDto);
 
@@ -26,5 +26,5 @@ public interface UserService extends IService<User> {
 
     Integer grantLevel();
 
-    Page<UserVo> getVoPage(Integer page, Integer pagesize, UserSelectDto userSelectDto);
+    Page<UseVo> getVoPage(Integer page, Integer pagesize, UserSelectDto userSelectDto);
 }

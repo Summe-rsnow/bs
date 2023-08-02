@@ -63,6 +63,8 @@ const logout = () => {
       (data, msg) => {
         userStore.user = null;
         userStore.token = '';
+        //去掉cookie
+        document.cookie = "rememberMe=; Max-Age=0; path=/";
         router.push('/');
       })
 }

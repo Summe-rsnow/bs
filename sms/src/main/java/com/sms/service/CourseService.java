@@ -14,7 +14,7 @@ public interface CourseService extends IService<Course> {
 
     Page<CourseVo> getVoPage(Integer page, Integer pagesize, Long id, CourseSelectDto courseSelectDto);
 
-    Result add(Course course);
+    Result<String> add(Course course);
 
     List<VisualizationData> courseCountRanking();
 }

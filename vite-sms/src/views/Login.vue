@@ -17,7 +17,8 @@
       <div class="function">
         <div @click="forget">忘记密码？</div>
         <button @click="login">登录</button>
-        <div class="remember"><input type="checkbox">
+        <div class="remember">
+          <input v-model="loginForm.rememberMe" type="checkbox">
           <div>记住我</div>
         </div>
       </div>
@@ -42,7 +43,7 @@
 <script setup>
 import {get, post} from '../net/index';
 import {useUserStore} from "../stores/index.js";
-import {onMounted, reactive, ref} from "vue";
+import {onBeforeMount, onMounted, reactive, ref} from "vue";
 import router from "../router/index.js";
 
 const userStore = useUserStore();
@@ -52,7 +53,8 @@ const username = ref('');
 const loginForm = reactive({
   username: '',
   password: '',
-  verificationCode: ''
+  verificationCode: '',
+  rememberMe: false
 })
 const forgetForm = reactive({
   username: '',
@@ -60,6 +62,11 @@ const forgetForm = reactive({
   newPwd: '',
   confirmPwd: ''
 })
+
+onBeforeMount(() => {
+  rememberMe();
+})
+
 onMounted(() => {
   refreshVerificationCode();
 })
@@ -105,6 +112,28 @@ const getVerificationCode = () => {
   get(`/user/phone_code/${forgetForm.username}`, () => {
 
   })
+}
+
+const rememberMe = () => {
+  const cookies = document.cookie.split(';');
+  let rememberMeValue = '';
+
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    if (cookie.startsWith('rememberMe=')) {
+      rememberMeValue = cookie.substring('rememberMe='.length);
+      break;
+    }
+  }
+
+  if (rememberMeValue) {
+    console.log('rememberMe value:', rememberMeValue);
+    post('/user/self/info', {token: rememberMeValue}, (data, msg) => {
+      userStore.token = rememberMeValue;
+      userStore.user = data;
+      router.push('/home');
+    })
+  }
 }
 </script>
 

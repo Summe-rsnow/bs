@@ -5,12 +5,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sms.common.Result;
 import com.sms.dto.CourseSelectDto;
 import com.sms.entity.Course;
-import com.sms.entity.User;
 import com.sms.service.CourseService;
 import com.sms.service.UserService;
 import com.sms.vo.CourseVo;
-import com.sms.vo.UserVo;
+import com.sms.vo.UseVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -25,22 +25,30 @@ public class CourseController {
     @Resource
     UserService userService;
 
+    /**
+     * 课程添加接口
+     *
+     * @param course
+     * @return
+     */
     @PostMapping("/add")
+    @CacheEvict(cacheNames = "CourseVisualization", allEntries = true)
     public Result<String> add(@RequestBody Course course) {
         if (!userService.isAdmin()) {
             return Result.error("当前用户没有该操作权限");
         }
-        User user = userService.getById(course.getTeacherId());
-        if (user == null || user.getUserGrant() != 1) {
-            return Result.error("该id不是教师id!");
-        }
-        log.info("添加课程:{}", course);
-        courseService.save(course);
-        return Result.success("添加成功");
+        return courseService.add(course);
     }
 
+    /**
+     * 课程信息修改接口
+     *
+     * @param course
+     * @return
+     */
     @PostMapping("/edit")
-    public Result<UserVo> edit(@RequestBody Course course) {
+    @CacheEvict(cacheNames = "CourseVisualization", allEntries = true)
+    public Result<UseVo> edit(@RequestBody Course course) {
         log.info("修改信息:{}", course);
         if (!userService.isAdmin()) {
             return Result.error("当前用户没有该操作权限");
@@ -51,7 +59,14 @@ public class CourseController {
         return Result.success("修改成功");
     }
 
+    /**
+     * 课程删除接口
+     *
+     * @param id
+     * @return
+     */
     @PostMapping("/del/{id}")
+    @CacheEvict(cacheNames = "CourseVisualization", allEntries = true)
     public Result<String> editInfo(@PathVariable(value = "id") Long id) {
         log.info("删除课程id:{}", id);
         if (!userService.isAdmin()) {

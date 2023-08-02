@@ -8,7 +8,8 @@
           <option value="0">男女比率图</option>
           <option value="1">账号权限比率图</option>
         </select>
-        <pie-chart :data="pieChartData.data" :title="pieChartData.title"></pie-chart>
+        <pie-chart :data="pieChartData.data" :theme="theme" :title="pieChartData.title"
+                   style="width: 500px;height: 500px;"/>
       </div>
       <div class="chart">
         <select @change="handleHistogram">
@@ -16,9 +17,9 @@
           <option value="0">成绩分布图</option>
           <option value="1">授课数量排行</option>
         </select>
-        <histogram-chart :data="histogramChartData.data"></histogram-chart>
+        <histogram-chart :data="histogramChartData.data" :theme="theme"
+                         style="width: 700px;height: 500px;"/>
       </div>
-
     </div>
   </div>
 </template>
@@ -29,6 +30,7 @@ import HistogramChart from "../components/HistogramChart.vue";
 import {get} from "../net/index.js";
 import {ref} from "vue";
 
+const theme = ref('dark');
 const pieChartData = ref({
   title: '',
   data: []
@@ -112,23 +114,27 @@ const courseCountRanking = () => {
     width: 100%;
     display: flex;
     justify-content: space-around;
+    gap: 40px;
 
     .chart {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      border: 1px solid #ccc;
-      border-radius: 20px;
-      background-color: #eed9d9;
-      box-shadow: 14px 14px 40px #343a40;
 
       select {
+        appearance: none;
         padding: 8px 12px;
-        font-size: 20px;
+        backdrop-filter: blur(8px);
+        font-size: 30px;
+        font-weight: 600;
         border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-bottom: 20px;
+        border-radius: 8px;
+        margin: 10px 0;
+
+        &:focus {
+          outline: none;
+        }
       }
     }
   }

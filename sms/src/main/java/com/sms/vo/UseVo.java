@@ -3,7 +3,7 @@ package com.sms.vo;
 import lombok.Data;
 
 @Data
-public class UserVo {
+public class UseVo {
     private Long id;
     private String username;
     private String name;//真实姓名

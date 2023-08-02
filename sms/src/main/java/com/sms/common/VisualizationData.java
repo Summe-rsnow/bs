@@ -10,6 +10,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Data
 public class VisualizationData implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Long value;
     private String name;
 }

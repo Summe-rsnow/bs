@@ -11,20 +11,21 @@ import com.sms.common.BaseContext;
 import com.sms.common.Result;
 import com.sms.config.JwtConfig;
 import com.sms.dto.PwdDto;
-import com.sms.dto.UserDto;
+import com.sms.dto.UserLoginDto;
 import com.sms.dto.UserSelectDto;
 import com.sms.entity.User;
 import com.sms.mapper.UserMapper;
 import com.sms.service.UserService;
 import com.sms.utils.JwtUtils;
-import com.sms.vo.UserVo;
+import com.sms.vo.UseVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 @Service
 @Slf4j
@@ -35,13 +36,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     JwtConfig jwtConfig;
 
     @Override
-    public Result<UserVo> login(HttpServletRequest request, UserDto userDto) {
+    public Result<UseVo> login(HttpServletResponse response, UserLoginDto userLoginDto) {
+
         //从数据库查询对象
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getUsername, userDto.getUsername());
+        queryWrapper.eq(User::getUsername, userLoginDto.getUsername());
         User user = userMapper.selectOne(queryWrapper);
         //将密码进行MD5加密
-        String password = DigestUtils.md5DigestAsHex(userDto.getPassword().getBytes());
+        String password = DigestUtils.md5DigestAsHex(userLoginDto.getPassword().getBytes());
         if (user == null || !user.getPassword().equals(password)) {//判断密码是否正确
             return Result.error("用户名或密码错误，请重试");
         }
@@ -51,9 +53,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (user.getStatus() == 2) {//判断账户是否可用  0为不可用 1为可用 2逻辑删除
             return Result.error("该用户名不存在，请重试");
         }
-        UserVo vo = new UserVo();
+        UseVo vo = new UseVo();
         BeanUtils.copyProperties(user, vo);
-        String token = JwtUtils.generateToken(vo.getId(), jwtConfig.getTimeout(), jwtConfig.getMySecretKey());
+        Long id = vo.getId();
+        //如果勾选记住我 加入if逻辑
+        String token;
+        if (userLoginDto.isRememberMe()) {
+            token = JwtUtils.generateToken(id, 604800000L, jwtConfig.getMySecretKey());//如果勾选记住我 设置1周时长的token
+            Cookie rememberMe = new Cookie("rememberMe", token);
+            rememberMe.setMaxAge(604800);
+            rememberMe.setPath("/");
+            response.addCookie(rememberMe);
+        } else {
+            token = JwtUtils.generateToken(id, jwtConfig.getTimeout(), jwtConfig.getMySecretKey());
+        }
         vo.setToken(token);
         return Result.success(vo);//返回查到对象（以json格式）
     }
@@ -93,6 +106,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return Result.success("新增成功");
     }
 
+    /**
+     * 用户数据校验方法
+     *
+     * @param user
+     * @return
+     */
     private String validateUser(User user) {
         String idNumber = user.getIdNumber();
         String phone = user.getPhone();
@@ -141,8 +160,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Page<UserVo> getVoPage(Integer page, Integer pagesize, UserSelectDto userSelectDto) {
-        Page<UserVo> userVoPage = new Page<>(page, pagesize);
+    public Page<UseVo> getVoPage(Integer page, Integer pagesize, UserSelectDto userSelectDto) {
+        Page<UseVo> userVoPage = new Page<>(page, pagesize);
         return userMapper.selectUserVoPage(userVoPage, userSelectDto);
     }
 }
