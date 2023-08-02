@@ -3,7 +3,7 @@
     <h1>数据可视化</h1>
     <div class="charts">
       <div class="chart">
-        <select @change="handleSelectChange">
+        <select @change="handlePie">
           <option value="-1"></option>
           <option value="0">男女比率图</option>
           <option value="1">账号权限比率图</option>
@@ -11,8 +11,10 @@
         <pie-chart :data="pieChartData.data" :title="pieChartData.title"></pie-chart>
       </div>
       <div class="chart">
-        <select>
-          <option value="-1">成绩分布图</option>
+        <select @change="handleHistogram">
+          <option value="-1"></option>
+          <option value="0">成绩分布图</option>
+          <option value="1">授课数量排行</option>
         </select>
         <histogram-chart :data="histogramChartData.data"></histogram-chart>
       </div>
@@ -25,18 +27,14 @@
 import PieChart from "../components/PieChart.vue";
 import HistogramChart from "../components/HistogramChart.vue";
 import {get} from "../net/index.js";
-import {onMounted, ref} from "vue";
-
-onMounted(() => {
-  gradeDistribution();
-})
+import {ref} from "vue";
 
 const pieChartData = ref({
   title: '',
   data: []
 });
 
-const handleSelectChange = (event) => {
+const handlePie = (event) => {
   const selectedOption = event.target.value;
   switch (selectedOption) {
     case '-1':
@@ -68,14 +66,32 @@ const GrantRatio = () => {
 
 const histogramChartData = ref({data: []});
 
+const handleHistogram = (event) => {
+  const selectedOption = event.target.value;
+  switch (selectedOption) {
+    case '-1':
+      histogramChartData.value.data = [];
+      break;
+    case '0':
+      gradeDistribution();
+      break;
+    case '1':
+      courseCountRanking();
+      break;
+  }
+};
+
 const gradeDistribution = () => {
   get('/common/data/grade/grade_distribution', (data, msg) => {
-    console.log(data);
     histogramChartData.value.data = data;
   })
 }
 
-
+const courseCountRanking = () => {
+  get('/common/data/course/count_ranking', (data, msg) => {
+    histogramChartData.value.data = data;
+  })
+}
 </script>
 
 <style lang="less" scoped>

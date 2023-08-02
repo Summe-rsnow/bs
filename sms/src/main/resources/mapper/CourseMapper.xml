@@ -16,4 +16,15 @@
             and u.name like '%${courseSelectDto.teacherName}%'
         </if>
     </select>
+
+    <select id="courseCountRanking" resultType="com.sms.common.VisualizationData">
+        select u.name as name, count(u.name) as value
+        from course
+            join user as u
+        on teacher_id = u.id
+        where course.deleted = 0
+        group by teacher_id
+        order by value desc
+            limit 5;
+    </select>
 </mapper>

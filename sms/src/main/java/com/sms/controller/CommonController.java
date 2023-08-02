@@ -8,6 +8,7 @@ import com.sms.common.Result;
 import com.sms.common.VisualizationData;
 import com.sms.entity.Grade;
 import com.sms.entity.User;
+import com.sms.service.CourseService;
 import com.sms.service.GradeService;
 import com.sms.service.UserService;
 import com.sms.utils.ValidateCodePicUtils;
@@ -35,6 +36,9 @@ public class CommonController {
 
     @Resource
     GradeService gradeService;
+
+    @Resource
+    CourseService courseService;
 
     @Value("${sms.path}")
     private String basePath;
@@ -189,6 +193,18 @@ public class CommonController {
                 new VisualizationData(gradeC, "71-80"),
                 new VisualizationData(gradeD, "81-90"),
                 new VisualizationData(gradeE, "91-100"));
+        return Result.success(list);
+    }
+
+    /**
+     * 教师授课数量排行可视化数据查询接口，使用缓存功能
+     *
+     * @return
+     */
+    @PostMapping("/data/course/count_ranking")
+    @Cacheable(cacheNames = "CourseVisualization", key = "'countRanking'")
+    public Result<List<VisualizationData>> countRanking() {
+        List<VisualizationData> list = courseService.courseCountRanking();
         return Result.success(list);
     }
 }
