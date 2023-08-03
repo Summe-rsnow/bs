@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.sms.common.BaseContext;
 import com.sms.common.Result;
 import com.sms.common.VisualizationData;
+import com.sms.dto.SetNoticeDto;
 import com.sms.entity.Grade;
 import com.sms.entity.User;
 import com.sms.service.CourseService;
@@ -17,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +30,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Api(tags = "通用接口")
 @RestController
@@ -42,6 +45,9 @@ public class CommonController {
 
     @Resource
     CourseService courseService;
+
+    @Resource
+    RedisTemplate redisTemplate;
 
     @Value("${sms.path}")
     private String basePath;
@@ -125,6 +131,28 @@ public class CommonController {
         ServletOutputStream servletOutputStream = response.getOutputStream();
         response.setContentType("image/jpeg");
         validateCodePic.write(servletOutputStream);
+    }
+
+    /**
+     * 公告设置接口 可根据grant字段设置谁能收到公告
+     *
+     * @param setNoticeDto
+     * @return
+     */
+    @ApiOperation("公告设置")
+    @PostMapping("/set/notice")
+    public Result<String> setNotice(@RequestBody SetNoticeDto setNoticeDto) {
+        if (!userService.isAdmin()) {
+            return Result.error("当前用户没有该操作权限");
+        }
+        String title = setNoticeDto.getTitle();
+        Integer[] grants = setNoticeDto.getGrants();
+        for (Integer grant : grants) {
+            redisTemplate.boundValueOps("notice:" + grant + ":" + title)
+                    .set(setNoticeDto.getText(), setNoticeDto.getHours(), TimeUnit.HOURS);
+        }
+        log.info("设置了通知，标题为:{}", title);
+        return Result.success("公告设置成功");
     }
 
     /**

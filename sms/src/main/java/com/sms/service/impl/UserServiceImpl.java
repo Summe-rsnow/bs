@@ -25,6 +25,8 @@ import org.springframework.util.DigestUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -87,21 +89,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Result<String> addUser(User user) {
-//        if (!isAdmin()) {
-//            return Result.error("当前用户没有该操作权限");
-//        }
-        String msg = validateUser(user);
-        if (msg != null) {
-            return Result.error(msg);
+    public Result<String> addUser(List<User> users) {
+        if (!isAdmin()) {
+            return Result.error("当前用户没有该操作权限");
         }
-        log.info("新增学生信息:{}", user);
+        List<User> processedUsers = new ArrayList<>();
+        StringBuilder errorMsg = new StringBuilder();
         String md5Password = DigestUtils.md5DigestAsHex("123456".getBytes());
-        user.setPassword(md5Password);
-        user.setStatus(1);
-        Snowflake snowflake = IdUtil.getSnowflake(1, 1);
-        user.setAvatar(snowflake.nextIdStr() + ".png");
-        save(user);
+        for (User user : users) {
+            String validationMsg = validateUser(user);
+            if (validationMsg != null) {
+                errorMsg.append(validationMsg);
+            } else {
+                user.setPassword(md5Password);
+                user.setStatus(1);
+                Snowflake snowflake = IdUtil.getSnowflake(1, 1);
+                user.setAvatar(snowflake.nextIdStr() + ".png");
+                log.info("新增学生信息: {}", user);
+                processedUsers.add(user);
+            }
+        }
+
+        if (errorMsg.length() > 0) {
+            return Result.error(errorMsg.toString());
+        }
+        saveBatch(processedUsers);
         return Result.success("新增成功");
     }
 
@@ -119,20 +131,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         //身份证校验
         //if (idNumber != null && !"".equals(idNumber.trim()) && !IdcardUtil.isValidCard(idNumber))  这个太严格了
-        if (idNumber != null && !"".equals(idNumber.trim()) && !ReUtil.isMatch("[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]", idNumber)) {
-            return "身份证无效";
+        if (idNumber != null && !"".equals(idNumber.trim()) && !ReUtil.isMatch("[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9X]", idNumber)) {
+            return "用户：" + username + "身份证无效\n";
         }
         //手机验证
         if (phone != null && !"".equals(phone.trim()) && !ReUtil.isMatch("^\\d{11}$", phone)) {
-            return "手机号码无效";
+            return "用户：" + username + "手机号码无效\n";
         }
         //邮箱验证
         if (email != null && !"".equals(email.trim()) && !ReUtil.isMatch("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$", email)) {
-            return "邮箱无效";
+            return "用户：" + username + "邮箱无效\n";
         }
         //用户名验证
         if (username != null && !"".equals(username.trim()) && !ReUtil.isMatch("^[a-zA-Z][a-zA-Z0-9]{4,15}$", username)) {
-            return "请输入5-16位账号，且账号开头为字母，只能包含字母和数字";
+            return "用户：" + username + "请输入5-16位账号，且账号开头为字母，只能包含字母和数字\n";
         }
         return null;
     }

@@ -10,13 +10,14 @@ import com.sms.entity.User;
 import com.sms.vo.UseVo;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 public interface UserService extends IService<User> {
     Result<UseVo> login(HttpServletResponse response, UserLoginDto userLoginDto);
 
     Result<String> resetPassword(PwdDto pwdDto);
 
-    Result<String> addUser(User user);
+    Result<String> addUser(List<User> users);
 
     boolean isAdmin();
 

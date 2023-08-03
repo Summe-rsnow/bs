@@ -6,6 +6,11 @@
         <div class="function">
           <button class="add" @click="add"><img alt="" src="../assets/icons/add.svg">新增</button>
           <button class="select" @click="select"><img alt="" src="../assets/icons/search.svg">查询</button>
+          <button class="csv" @click="onCSV">
+            <input v-show="false" id="csv" accept=".csv" name="select" type="file" v-on:change="onFileChange">
+            批量添加
+          </button>
+
         </div>
         <table>
           <thead>
@@ -395,21 +400,36 @@ const resetFormData = () => {
   formData.idNumber = null;
   formData.userGrant = 2;
 }
+
+const onCSV = () => {
+  document.getElementById('csv').click();
+}
+
+let file;
+
+const onFileChange = (event) => {
+  file = event.target.files[0];
+  const formData = new FormData();
+  formData.append('file', file);
+  post('/user/csv/add', formData, (data, msg) => {
+    alert(msg);
+  })
+}
 </script>
 
 <style lang="less" scoped>
 @import "../assets/css/manager";
 
 table td:nth-child(1) {
-  width: 20%;
+  width: 15%;
 }
 
 table td:nth-child(2) {
-  width: 10%;
+  width: 14%;
 }
 
 table td:nth-child(4) {
-  width: 18%;
+  width: 23%;
 }
 
 table td:nth-child(3),
@@ -427,6 +447,6 @@ table td:nth-child(8) {
 }
 
 table td:nth-child(9) {
-  width: 20%;
+  width: 16%;
 }
 </style>

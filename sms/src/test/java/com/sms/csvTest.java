@@ -18,6 +18,9 @@ public class csvTest {
         CsvReader reader = CsvUtil.getReader();
         //从文件中读取CSV数据
         //转换为Bean
+        //以下为从文件读取方法
+        //BufferedInputStream in = FileUtil.getInputStream("C:\\Users\\sssnow\\Downloads\\MOCK_DATA.csv");
+        //BufferedReader utf8Reader = IoUtil.getUtf8Reader(in);
         BufferedReader utf8Reader = ResourceUtil.getUtf8Reader("MOCK_DATA.csv");
         List<UserAddDto> list = reader.read(utf8Reader, UserAddDto.class);
         list.forEach(i -> {

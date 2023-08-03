@@ -1,5 +1,8 @@
 package com.sms.controller;
 
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.text.csv.CsvReader;
+import cn.hutool.core.text.csv.CsvUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sms.common.BaseContext;
@@ -22,10 +25,15 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -174,7 +182,38 @@ public class UserController {
     public Result<String> add(@RequestBody UserAddDto userAddDto) {
         User user = new User();
         BeanUtils.copyProperties(userAddDto, user);
-        return userService.addUser(user);
+        List<User> users = List.of(user);
+        return userService.addUser(users);
+    }
+
+    /**
+     * 从csv批量导入用户的接口
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    @ApiOperation("文件批量添加用户")
+    @PostMapping("/csv/add")
+    @CacheEvict(cacheNames = "UserVisualization", allEntries = true)
+    public Result<String> csvAdd(MultipartFile file) throws IOException {
+        if (file == null) {
+            return Result.error("未选择文件");
+        }
+        // 获取文件后缀名
+        String filename = file.getOriginalFilename();
+        System.out.println(filename);
+        String[] split = filename.split("\\.");
+        String fileExtension = split[split.length - 1];
+        if (!fileExtension.equals("csv")) {
+            return Result.error("请上传格式正确的文件");
+        }
+        //从流读取csv文件
+        InputStream in = file.getInputStream();
+        BufferedReader utf8Reader = IoUtil.getUtf8Reader(in);
+        CsvReader reader = CsvUtil.getReader();
+        List<User> list = reader.read(utf8Reader, User.class);
+        return userService.addUser(list);
     }
 
     /**
