@@ -16,12 +16,15 @@ import com.sms.service.UserService;
 import com.sms.vo.CourseVo;
 import com.sms.vo.GradeVo;
 import com.sms.vo.UseVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+@Api(tags = "成绩相关接口")
 @RestController
 @RequestMapping("/grade")
 @Slf4j
@@ -40,6 +43,7 @@ public class GradeController {
      * @param grade
      * @return
      */
+    @ApiOperation("成绩添加")
     @PostMapping("/add")
     @CacheEvict(cacheNames = "GradeVisualization", allEntries = true)
     public Result<String> insert(@RequestBody Grade grade) {
@@ -71,6 +75,7 @@ public class GradeController {
      * @param gradeEditDto
      * @return
      */
+    @ApiOperation("成绩修改")
     @PostMapping("/edit")
     @CacheEvict(cacheNames = "GradeVisualization", allEntries = true)
     public Result<String> edit(@RequestBody GradeEditDto gradeEditDto) {
@@ -87,6 +92,7 @@ public class GradeController {
      * @param id
      * @return
      */
+    @ApiOperation("成绩删除")
     @PostMapping("/del/{id}")
     @CacheEvict(cacheNames = "GradeVisualization", allEntries = true)
     public Result<String> editInfo(@PathVariable(value = "id") Long id) {
@@ -99,13 +105,14 @@ public class GradeController {
     }
 
     /**
-     * 学生查询自己成绩的接口
+     * 学生分页查询自己成绩的接口
      *
      * @param page
      * @param pagesize
      * @param gradeSelectDto
      * @return
      */
+    @ApiOperation("学生个人成绩分页查询")
     @PostMapping("/{page}/{pagesize}")
     public Result<Page<GradeVo>> getGradePageByStudentId(@PathVariable Integer page, @PathVariable Integer pagesize, @RequestBody GradeSelectDto gradeSelectDto) {
         if (!userService.isStudent()) {
@@ -116,13 +123,14 @@ public class GradeController {
     }
 
     /**
-     * 教师查询自己成绩的成绩的信息接口
+     * 教师分页查询自己添加的成绩的信息接口
      *
      * @param page
      * @param pagesize
      * @param gradeSelectDto
      * @return
      */
+    @ApiOperation("教师的学生成绩分页查询")
     @PostMapping("/change/{page}/{pagesize}")
     public Result<Page<GradeVo>> changeGradePage(@PathVariable Integer page, @PathVariable Integer pagesize, @RequestBody GradeSelectDto gradeSelectDto) {
         if (!userService.isTeacher()) {
@@ -133,13 +141,14 @@ public class GradeController {
     }
 
     /**
-     * 教师查询学生信息接口
+     * 教师分页查询学生信息接口
      *
      * @param page
      * @param pagesize
      * @param userSelectDto
      * @return
      */
+    @ApiOperation("教师的学生信息分页查询")
     @PostMapping("/student/{page}/{pagesize}")
     public Result<Page<UseVo>> studentPage(@PathVariable Integer page, @PathVariable Integer pagesize, @RequestBody UserSelectDto userSelectDto) {
         if (!userService.isTeacher()) {
@@ -151,13 +160,14 @@ public class GradeController {
     }
 
     /**
-     * 教师查询自己的课程的信息接口
+     * 教师分页查询自己的课程的信息接口
      *
      * @param page
      * @param pagesize
      * @param courseSelectDto
      * @return
      */
+    @ApiOperation("教师的课程信息分页查询")
     @PostMapping("/course/{page}/{pagesize}")
     public Result<Page<CourseVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize, @RequestBody CourseSelectDto courseSelectDto) {
         if (!userService.isTeacher()) {

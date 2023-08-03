@@ -37,13 +37,13 @@ export default {
             saveAsImage: {
               show: true,
               title: '保存为图片',
-              iconStyle:{
+              iconStyle: {
                 color: '#f1f3f5',
-                borderColor:'#e9ecef'
+                borderColor: '#e9ecef'
               },
-              emphasis:{
+              emphasis: {
                 iconStyle: {
-                  color:'#fff',
+                  color: '#fff',
                   borderColor: '#000'
                 }
               }

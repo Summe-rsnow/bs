@@ -9,12 +9,15 @@ import com.sms.service.CourseService;
 import com.sms.service.UserService;
 import com.sms.vo.CourseVo;
 import com.sms.vo.UseVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+@Api(tags = "课程相关接口")
 @RestController
 @RequestMapping("/course")
 @Slf4j
@@ -31,6 +34,7 @@ public class CourseController {
      * @param course
      * @return
      */
+    @ApiOperation("课程添加")
     @PostMapping("/add")
     @CacheEvict(cacheNames = "CourseVisualization", allEntries = true)
     public Result<String> add(@RequestBody Course course) {
@@ -46,6 +50,7 @@ public class CourseController {
      * @param course
      * @return
      */
+    @ApiOperation("课程修改")
     @PostMapping("/edit")
     @CacheEvict(cacheNames = "CourseVisualization", allEntries = true)
     public Result<UseVo> edit(@RequestBody Course course) {
@@ -65,6 +70,7 @@ public class CourseController {
      * @param id
      * @return
      */
+    @ApiOperation("课程删除")
     @PostMapping("/del/{id}")
     @CacheEvict(cacheNames = "CourseVisualization", allEntries = true)
     public Result<String> editInfo(@PathVariable(value = "id") Long id) {
@@ -76,6 +82,15 @@ public class CourseController {
         return Result.success("删除成功");
     }
 
+    /**
+     * 课程信息分页查询接口
+     *
+     * @param page
+     * @param pagesize
+     * @param courseSelectDto
+     * @return
+     */
+    @ApiOperation("课程分页查询")
     @PostMapping("/{page}/{pagesize}")
     public Result<Page<CourseVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize, @RequestBody CourseSelectDto courseSelectDto) {
         if (!userService.isAdmin()) {

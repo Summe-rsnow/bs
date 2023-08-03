@@ -7,16 +7,15 @@ import com.sms.common.Result;
 import com.sms.common.Token;
 import com.sms.config.CodeConfig;
 import com.sms.config.JwtConfig;
-import com.sms.dto.PwdDto;
-import com.sms.dto.PwdForgetDto;
-import com.sms.dto.UserLoginDto;
-import com.sms.dto.UserSelectDto;
+import com.sms.dto.*;
 import com.sms.entity.User;
 import com.sms.service.UserService;
 import com.sms.utils.JwtUtils;
 import com.sms.utils.SendPhoneCodeUtils;
 import com.sms.utils.ValidateCodeUtils;
 import com.sms.vo.UseVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheEvict;
@@ -30,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+@Api(tags = "用户相关接口")
 @RestController
 @RequestMapping("/user")
 @Slf4j
@@ -53,6 +53,7 @@ public class UserController {
      * @param userLoginDto
      * @return
      */
+    @ApiOperation("用户登录")
     @PostMapping("/login")
     public Result<UseVo> login(HttpServletRequest request, HttpServletResponse response, @RequestBody UserLoginDto userLoginDto) {
         log.info("登录学生信息:{}", userLoginDto);
@@ -71,6 +72,7 @@ public class UserController {
      *
      * @return
      */
+    @ApiOperation("用户登出")
     @PostMapping("/logout")
     public Result<String> logout() {
         log.info("退出登录");
@@ -78,11 +80,12 @@ public class UserController {
     }
 
     /**
-     * remember me 功能配套接口 直接通过令牌获取信息
+     * remember me功能配套接口 直接通过令牌获取信息
      *
      * @param token
      * @return
      */
+    @ApiOperation("通过令牌获取个人信息")
     @PostMapping("/self/info")
     public Result<User> selfInfo(@RequestBody Token token) {
         Long id = JwtUtils.getUserIdFromToken(token.getToken(), jwtConfig.getMySecretKey());
@@ -98,6 +101,7 @@ public class UserController {
      * @param username
      * @return
      */
+    @ApiOperation("手机验证码")
     @PostMapping("/phone_code/{username}")
     public Result<String> phoneCode(@PathVariable String username) {
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
@@ -126,6 +130,7 @@ public class UserController {
      * @param pwdDto
      * @return
      */
+    @ApiOperation("修改密码")
     @PostMapping("/pwd")
     public Result<String> pwd(@RequestBody PwdDto pwdDto) {
         return userService.resetPassword(pwdDto);
@@ -137,6 +142,7 @@ public class UserController {
      * @param pwdForgetDto
      * @return
      */
+    @ApiOperation("忘记密码重设密码")
     @PostMapping("/pwd/forget")
     public Result<String> pwdForget(@RequestBody PwdForgetDto pwdForgetDto) {
         String username = pwdForgetDto.getUsername();
@@ -159,12 +165,15 @@ public class UserController {
     /**
      * 用户添加接口
      *
-     * @param user
+     * @param userAddDto
      * @return
      */
+    @ApiOperation("用户添加")
     @PostMapping("/add")
     @CacheEvict(cacheNames = "UserVisualization", allEntries = true)
-    public Result<String> add(@RequestBody User user) {
+    public Result<String> add(@RequestBody UserAddDto userAddDto) {
+        User user = new User();
+        BeanUtils.copyProperties(userAddDto, user);
         return userService.addUser(user);
     }
 
@@ -174,6 +183,7 @@ public class UserController {
      * @param user
      * @return
      */
+    @ApiOperation("用户管理信息修改")
     @PostMapping("/edit")
     @CacheEvict(cacheNames = "UserVisualization", allEntries = true)
     public Result<UseVo> edit(@RequestBody User user) {
@@ -195,6 +205,7 @@ public class UserController {
      * @param user
      * @return
      */
+    @ApiOperation("个人修改信息")
     @PostMapping("/self/edit")
     @CacheEvict(cacheNames = "UserVisualization", allEntries = true)
     public Result<UseVo> editInfo(@RequestBody User user) {
@@ -218,6 +229,7 @@ public class UserController {
      * @param ban
      * @return
      */
+    @ApiOperation("禁用用户")
     @PostMapping("/ban/{ban}/{id}")
     public Result<String> banUser(@PathVariable Long id, @PathVariable Integer ban) {
         log.info("禁用用户id:{}", id);
@@ -238,6 +250,7 @@ public class UserController {
      * @param id
      * @return
      */
+    @ApiOperation("删除用户")
     @PostMapping("/del/{id}")
     @CacheEvict(cacheNames = "UserVisualization", allEntries = true)
     public Result<String> delUser(@PathVariable(value = "id") Long id) {
@@ -257,6 +270,7 @@ public class UserController {
      * @param userSelectDto
      * @return
      */
+    @ApiOperation("用户信息分页查询")
     @PostMapping("/{page}/{pagesize}")
     public Result<Page<UseVo>> getUserPage(@PathVariable Integer page, @PathVariable Integer pagesize, @RequestBody UserSelectDto userSelectDto) {
         if (!userService.isAdmin()) {

@@ -12,6 +12,8 @@ import com.sms.service.CourseService;
 import com.sms.service.GradeService;
 import com.sms.service.UserService;
 import com.sms.utils.ValidateCodePicUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,9 +29,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
-@Slf4j
+@Api(tags = "通用接口")
 @RestController
 @RequestMapping("/common")
+@Slf4j
 public class CommonController {
     @Resource
     UserService userService;
@@ -65,6 +68,7 @@ public class CommonController {
      * @return
      * @throws IOException
      */
+    @ApiOperation("头像上传")
     @PostMapping("/avatar/upload")
     public Result<String> upload(MultipartFile file) throws IOException {
         //获取文件原始文件名,并获文件后缀
@@ -82,6 +86,7 @@ public class CommonController {
      * @param id
      * @throws IOException
      */
+    @ApiOperation("头像下载")
     @PostMapping("/avatar/download/{id}")
     public void avatar(HttpServletResponse response, @PathVariable long id) throws IOException {
         User user = userService.getById(id);
@@ -108,6 +113,7 @@ public class CommonController {
      * @param response
      * @throws IOException
      */
+    @ApiOperation("登录验证码")
     @GetMapping("/vcode")
     public void vcode(HttpServletRequest request, HttpServletResponse response) throws IOException {
         //定义图形验证码的长，宽和长度
@@ -126,6 +132,7 @@ public class CommonController {
      *
      * @return
      */
+    @ApiOperation("男女比率可视化数据")
     @PostMapping("/data/user/mf_ratio")
     @Cacheable(cacheNames = "UserVisualization", key = "'mfRatio'")
     public Result<List<VisualizationData>> mfRatio() {
@@ -157,6 +164,7 @@ public class CommonController {
      *
      * @return
      */
+    @ApiOperation("用户权限比率可视化数据")
     @PostMapping("/data/user/grant_ratio")
     @Cacheable(cacheNames = "UserVisualization", key = "'grantRatio'")
     public Result<List<VisualizationData>> grantRatio() {
@@ -188,6 +196,7 @@ public class CommonController {
      *
      * @return
      */
+    @ApiOperation("成绩分布可视化数据")
     @PostMapping("/data/grade/grade_distribution")
     @Cacheable(cacheNames = "GradeVisualization", key = "'gradeDistribution'")
     public Result<List<VisualizationData>> gradeDistribution() {
@@ -228,6 +237,7 @@ public class CommonController {
      *
      * @return
      */
+    @ApiOperation("教师授课数量排行可视化数据")
     @PostMapping("/data/course/count_ranking")
     @Cacheable(cacheNames = "CourseVisualization", key = "'countRanking'")
     public Result<List<VisualizationData>> countRanking() {

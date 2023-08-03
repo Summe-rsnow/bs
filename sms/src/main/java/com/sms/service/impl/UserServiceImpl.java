@@ -2,7 +2,6 @@ package com.sms.service.impl;
 
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.IdcardUtil;
 import cn.hutool.core.util.ReUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -119,8 +118,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String username = user.getUsername();
 
         //身份证校验
-        if (idNumber != null && !"".equals(idNumber.trim()) && !IdcardUtil.isValidCard(idNumber)) {
-            return "验证码无效";
+        //if (idNumber != null && !"".equals(idNumber.trim()) && !IdcardUtil.isValidCard(idNumber))  这个太严格了
+        if (idNumber != null && !"".equals(idNumber.trim()) && !ReUtil.isMatch("[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]", idNumber)) {
+            return "身份证无效";
         }
         //手机验证
         if (phone != null && !"".equals(phone.trim()) && !ReUtil.isMatch("^\\d{11}$", phone)) {
