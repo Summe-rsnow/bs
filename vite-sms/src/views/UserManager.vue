@@ -321,6 +321,7 @@ const submitAddForm = () => {
 }
 
 const submitSelectForm = () => {
+  page.value = 1;
   flash();
   cancelForm();
 }

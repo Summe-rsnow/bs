@@ -2,23 +2,29 @@
   <div class="container">
     <h1>数据可视化</h1>
     <div class="charts">
-      <div class="chart">
-        <select @change="handlePie">
-          <option value="-1"></option>
-          <option value="0">男女比率图</option>
-          <option value="1">账号权限比率图</option>
-        </select>
-        <pie-chart :data="pieChartData.data" :theme="theme" :title="pieChartData.title"
-                   style="width: 500px;height: 500px;"/>
+      <div class="pie">
+        <div class="chart">
+          <h2>{{ MFRatioData.title }}</h2>
+          <pie-chart :data="MFRatioData.data" :theme="theme" :title="MFRatioData.title"
+                     style="width: 500px;height: 500px;"/>
+        </div>
+        <div class="chart">
+          <h2>{{ GrantRatioData.title }}</h2>
+          <pie-chart :data="GrantRatioData.data" :theme="theme" :title="GrantRatioData.title"
+                     style="width: 500px;height: 500px;"/>
+        </div>
       </div>
-      <div class="chart">
-        <select @change="handleHistogram">
-          <option value="-1"></option>
-          <option value="0">成绩分布图</option>
-          <option value="1">授课数量排行</option>
-        </select>
-        <histogram-chart :data="histogramChartData.data" :theme="theme"
-                         style="width: 700px;height: 500px;"/>
+      <div class="histogram">
+        <div class="chart">
+          <h2>{{ gradeDistributionData.title }}</h2>
+          <histogram-chart :data="gradeDistributionData.data" :theme="theme"
+                           style="width: 700px;height: 500px;"/>
+        </div>
+        <div class="chart">
+          <h2>{{ courseCountRankingData.title }}</h2>
+          <histogram-chart :data="courseCountRankingData.data" :theme="theme"
+                           style="width: 700px;height: 500px;"/>
+        </div>
       </div>
     </div>
   </div>
@@ -28,70 +34,50 @@
 import PieChart from "../components/PieChart.vue";
 import HistogramChart from "../components/HistogramChart.vue";
 import {get} from "../net/index.js";
-import {ref} from "vue";
+import {onBeforeMount, ref} from "vue";
+
+onBeforeMount(() => {
+  MFRatio();
+  GrantRatio();
+  gradeDistribution();
+  courseCountRanking();
+})
 
 const theme = ref('light');
-const pieChartData = ref({
-  title: '',
-  data: []
-});
 
-const handlePie = (event) => {
-  const selectedOption = event.target.value;
-  switch (selectedOption) {
-    case '-1':
-      pieChartData.value.title = '';
-      pieChartData.value.data = [];
-      break;
-    case '0':
-      MFRatio();
-      break;
-    case '1':
-      GrantRatio();
-      break;
-  }
-};
+const MFRatioData = ref({title: '', data: []});
 
 const MFRatio = () => {
-  pieChartData.value.title = '男女比率';
+  MFRatioData.value.title = '男女比率';
   get('/common/data/user/mf_ratio', (data, msg) => {
-    pieChartData.value.data = data;
+    MFRatioData.value.data = data;
   })
 }
+
+const GrantRatioData = ref({title: '', data: []});
 
 const GrantRatio = () => {
-  pieChartData.value.title = '用户权限比率';
+  GrantRatioData.value.title = '用户权限比率';
   get('/common/data/user/grant_ratio', (data, msg) => {
-    pieChartData.value.data = data;
+    GrantRatioData.value.data = data;
   })
 }
 
-const histogramChartData = ref({data: []});
-
-const handleHistogram = (event) => {
-  const selectedOption = event.target.value;
-  switch (selectedOption) {
-    case '-1':
-      histogramChartData.value.data = [];
-      break;
-    case '0':
-      gradeDistribution();
-      break;
-    case '1':
-      courseCountRanking();
-      break;
-  }
-};
+const gradeDistributionData = ref({title: '', data: []});
 
 const gradeDistribution = () => {
+  gradeDistributionData.value.title = '成绩总分布';
   get('/common/data/grade/grade_distribution', (data, msg) => {
-    histogramChartData.value.data = data;
+    gradeDistributionData.value.data = data;
   })
 }
 
+const courseCountRankingData = ref({title: '', data: []});
+
 const courseCountRanking = () => {
+  courseCountRankingData.value.title = '教师授课数排行';
   get('/common/data/course/count_ranking', (data, msg) => {
-    histogramChartData.value.data = data;
+    courseCountRankingData.value.data = data;
   })
 }
 </script>
@@ -117,24 +103,21 @@ const courseCountRanking = () => {
     gap: 40px;
 
     .chart {
+      margin: 40px 0;
+      padding: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      border-radius: 20px;
+      background-color: #4fcfa9;
+      box-shadow: 14px 14px 40px #343a40;
 
-      select {
-        appearance: none;
-        padding: 8px 12px;
-        backdrop-filter: blur(8px);
+      h2 {
         font-size: 30px;
         font-weight: 600;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        margin: 10px 0;
-
-        &:focus {
-          outline: none;
-        }
+        color: #333333;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
       }
     }
   }

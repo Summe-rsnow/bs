@@ -88,9 +88,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Result<String> addUser(User user) {
-        if (!isAdmin()) {
-            return Result.error("当前用户没有该操作权限");
-        }
+//        if (!isAdmin()) {
+//            return Result.error("当前用户没有该操作权限");
+//        }
         String msg = validateUser(user);
         if (msg != null) {
             return Result.error(msg);

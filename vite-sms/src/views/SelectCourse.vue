@@ -93,6 +93,7 @@ const select = () => {
 }
 
 const submitSelectForm = () => {
+  page.value = 1;
   flash();
   cancelForm();
 }
