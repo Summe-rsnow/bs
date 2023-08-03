@@ -4,7 +4,7 @@
 
 <script>
 import * as echarts from 'echarts/core';
-import {GridComponent} from 'echarts/components';
+import {GridComponent, ToolboxComponent} from 'echarts/components';
 import {BarChart} from 'echarts/charts';
 import {CanvasRenderer} from 'echarts/renderers';
 
@@ -28,6 +28,28 @@ export default {
         yAxis: {
           type: 'value'
         },
+        toolbox: {
+          show: true,
+          orient: "vertical",
+          left: "center",
+          top: "bottom",
+          feature: {
+            saveAsImage: {
+              show: true,
+              title: '保存为图片',
+              iconStyle:{
+                color: '#f1f3f5',
+                borderColor:'#e9ecef'
+              },
+              emphasis:{
+                iconStyle: {
+                  color:'#fff',
+                  borderColor: '#000'
+                }
+              }
+            },  // 保存图表
+          },
+        },
         series: [
           {
             data: this.data.map(i => i.value),
@@ -37,12 +59,16 @@ export default {
               color: 'rgba(180, 180, 180, 0.2)'
             }
           }
-        ]
+        ],
       };
     }
   },
   mounted() {
-    echarts.use([GridComponent, BarChart, CanvasRenderer]);
+    echarts.use([
+      GridComponent,
+      ToolboxComponent,
+      BarChart,
+      CanvasRenderer]);
     const myChart = this.theme ? echarts.init(this.$refs.chart, this.theme) : echarts.init(this.$refs.chart);
     // 监听数据变化，并更新图表
     this.$watch('data', () => {

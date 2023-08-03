@@ -5,7 +5,7 @@
 
 <script>
 import * as echarts from 'echarts/core';
-import {LegendComponent, TooltipComponent} from 'echarts/components';
+import {LegendComponent, ToolboxComponent, TooltipComponent} from 'echarts/components';
 import {PieChart} from 'echarts/charts';
 import {LabelLayout} from 'echarts/features';
 import {CanvasRenderer} from 'echarts/renderers';
@@ -32,6 +32,28 @@ export default {
           top: '5%',
           left: 'center'
         },
+        toolbox: {
+          show: true,
+          orient: "vertical",
+          left: "center",
+          top: "bottom",
+          feature: {
+            saveAsImage: {
+              show: true, // 保存图表
+              title: '保存为图片',
+              iconStyle:{
+                color: '#f1f3f5',
+                borderColor:'#e9ecef'
+              },
+              emphasis:{
+                iconStyle: {
+                  color:'#fff',
+                  borderColor: '#000'
+                }
+              }
+            },
+          },
+        },
         series: [
           {
             name: this.title,
@@ -54,18 +76,18 @@ export default {
             },
             data: this.data // 将原先的数据改为从接收的 data 属性中获取
           }
-        ]
-      }
+        ],
+      };
     }
   },
   mounted() {
     echarts.use([
       TooltipComponent,
       LegendComponent,
+      ToolboxComponent,
       PieChart,
       CanvasRenderer,
-      LabelLayout
-    ]);
+      LabelLayout]);
     const myChart = this.theme ? echarts.init(this.$refs.chart, this.theme) : echarts.init(this.$refs.chart);
     myChart.setOption(this.option);
     // 监听数据变化，并更新图表

@@ -30,7 +30,7 @@ import HistogramChart from "../components/HistogramChart.vue";
 import {get} from "../net/index.js";
 import {ref} from "vue";
 
-const theme = ref('dark');
+const theme = ref('light');
 const pieChartData = ref({
   title: '',
   data: []
