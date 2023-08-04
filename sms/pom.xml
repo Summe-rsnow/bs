@@ -8,14 +8,13 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <!--经过测试可降级2.4.5-->
         <version>2.7.14</version>
-        <relativePath/>
     </parent>
     <groupId>com.sms</groupId>
     <artifactId>sms</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
     </properties>
 
     <dependencies>
@@ -49,16 +48,16 @@
 
         <!--Mysql数据库支持-->
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.3.1</version>
-        </dependency>
-
-        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.5.3.1</version>
         </dependency>
 
         <!--Redis数据库支持-->
@@ -80,13 +79,6 @@
             <version>1.18.28</version>
         </dependency>
 
-        <!--阿里的json实现-->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>2.0.37</version>
-        </dependency>
-
         <!--多功能工具包-->
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -106,7 +98,6 @@
             <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
             <version>2.2.1</version>
         </dependency>
-
     </dependencies>
 
     <build>

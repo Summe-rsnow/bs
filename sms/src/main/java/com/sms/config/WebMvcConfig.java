@@ -40,7 +40,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
                 .description("学生成绩管理系统项目接口文档")
                 .build();
 
-        Docket docket = new Docket(DocumentationType.SWAGGER_2)
+        return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("主分组")
                 .apiInfo(apiInfo)
                 .select()
@@ -48,8 +48,6 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
                 .apis(RequestHandlerSelectors.basePackage("com.sms.controller"))
                 .paths(PathSelectors.any())
                 .build();
-
-        return docket;
     }
 
     @Override

@@ -15,8 +15,8 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for="row in userPage.records" :key="row">
-            <td v-for="k in userPage.keys" :key="k">{{ row[k] }}</td>
+          <tr v-for="row in gradePage.records" :key="row">
+            <td v-for="k in gradePage.keys" :key="k">{{ row[k] }}</td>
             <td>
               <div style="display: flex;justify-content: space-around;">
                 <button class="l" @click="edit(row)"><img alt="" src="../assets/icons/edit.svg">修改</button>
@@ -31,9 +31,12 @@
             上一页
           </button>
           <span>第{{ page }}页</span>
-          <button v-show="userPage.total/pagesize>page" @click="nextPage">
+          <button v-show="gradePage.total/pagesize>page" @click="nextPage">
             下一页
           </button>
+          <div class="total">共{{ Math.ceil(gradePage.total / pagesize) }}页</div>
+          <input v-model="targetPage" :max="gradePage.total/pagesize" min="1" type="number">
+          <button @click="gotoPage">跳转</button>
         </div>
       </div>
     </div>
@@ -101,8 +104,9 @@ import {useUserStore} from "../stores/index.js";
 const userStore = useUserStore();
 const page = ref(1);
 const pagesize = ref(10);
+const targetPage = ref();
 const header = ref(['ID', '学生ID', '学生姓名', '课程名称', '分数']);
-const userPage = reactive({
+const gradePage = reactive({
   total: null, records: [],
   keys: ['id', 'studentId', 'studentName', 'courseName', 'score']
 });
@@ -129,8 +133,8 @@ const selectData = reactive({
 const flash = () => {
   post(`/grade/change/${page.value}/${pagesize.value}`, selectData,
       (data, msg) => {
-        userPage.records = data.records;
-        userPage.total = data.total;
+        gradePage.records = data.records;
+        gradePage.total = data.total;
       }
   )
 }
@@ -150,6 +154,15 @@ const prevPage = () => {
   page.value--;
   flash();
 };
+
+const gotoPage = () => {
+  if (targetPage.value >= 1 && targetPage.value <= Math.ceil(gradePage.total / pagesize.value)) {
+    page.value = targetPage.value;
+    flash();
+  } else {
+    alert('请输入正确的页码');
+  }
+}
 
 const add = () => {
   resetFormData();

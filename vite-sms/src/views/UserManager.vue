@@ -6,11 +6,12 @@
         <div class="function">
           <button class="add" @click="add"><img alt="" src="../assets/icons/add.svg">新增</button>
           <button class="select" @click="select"><img alt="" src="../assets/icons/search.svg">查询</button>
+          <button class="select" @click="getTemplate"><img alt="" src="../assets/icons/file.svg">模版获取</button>
           <button class="csv" @click="onCSV">
+            <img src="../assets/icons/add_all.svg">
             <input v-show="false" id="csv" accept=".csv" name="select" type="file" v-on:change="onFileChange">
             批量添加
           </button>
-
         </div>
         <table>
           <thead>
@@ -45,6 +46,9 @@
           <button v-show="userPage.total/pagesize>page" @click="nextPage">
             下一页
           </button>
+          <div class="total">共{{ userPage.total / pagesize }}页</div>
+          <input v-model="targetPage" :max="userPage.total/pagesize" min="1" type="number">
+          <button @click="gotoPage">跳转</button>
         </div>
       </div>
     </div>
@@ -182,6 +186,7 @@ import {onBeforeMount, reactive, ref} from "vue";
 
 const page = ref(1);
 const pagesize = ref(10);
+const targetPage = ref();
 const header = ref(['ID', '用户名', '姓名', '邮箱', '性别', '年龄', '手机号码', '身份']);
 const grantName = ref(['管理员', '教师', '学生']);
 const userPage = reactive({
@@ -242,6 +247,15 @@ const prevPage = () => {
   page.value--;
   flash();
 };
+
+const gotoPage = () => {
+  if (targetPage.value >= 1 && targetPage.value <= Math.ceil(userPage.total / pagesize.value)) {
+    page.value = targetPage.value;
+    flash();
+  } else {
+    alert('请输入正确的页码');
+  }
+}
 
 const add = () => {
   resetFormData();
@@ -414,6 +428,21 @@ const onFileChange = (event) => {
   post('/user/csv/add', formData, (data, msg) => {
     alert(msg);
   })
+}
+
+const getTemplate = () => {
+  fetch('/UserTemplate.csv') // 替换为实际文件的路径
+      .then(response => response.blob())
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'UserTemplate.csv'; // 设置文件名
+        link.click();
+      })
+      .catch(error => {
+        console.error('获取文件失败:', error);
+      });
 }
 </script>
 

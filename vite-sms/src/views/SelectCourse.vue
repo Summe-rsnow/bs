@@ -24,6 +24,9 @@
           <button v-show="coursePage.total/pagesize>page" @click="nextPage">
             下一页
           </button>
+          <div class="total">共{{ Math.ceil(coursePage.total / pagesize) }}页</div>
+          <input v-model="targetPage" :max="coursePage.total/pagesize" min="1" type="number">
+          <button @click="gotoPage">跳转</button>
         </div>
       </div>
     </div>
@@ -51,6 +54,7 @@ const blur = ref(false);
 const showSelectFormFlag = ref(false);
 const page = ref(1);
 const pagesize = ref(10);
+const targetPage = ref();
 const header = ref(['ID', '课程名称', '授课教师ID', '授课教师名称']);
 const coursePage = reactive({
   total: null, records: [],
@@ -86,6 +90,15 @@ const prevPage = () => {
   page.value--;
   flash();
 };
+
+const gotoPage = () => {
+  if (targetPage.value >= 1 && targetPage.value <= Math.ceil(coursePage.total / pagesize.value)) {
+    page.value = targetPage.value;
+    flash();
+  } else {
+    alert('请输入正确的页码');
+  }
+}
 
 const select = () => {
   blur.value = true;
