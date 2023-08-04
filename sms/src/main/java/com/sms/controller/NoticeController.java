@@ -33,7 +33,7 @@ public class NoticeController {
      * @return
      */
     @ApiOperation("公告添加")
-    @PostMapping("/notice/set")
+    @PostMapping("/set")
     public Result<String> setNotice(@RequestBody Notice notice) {
         if (!userService.isAdmin()) {
             return Result.error("当前用户没有该操作权限");
@@ -49,8 +49,8 @@ public class NoticeController {
     }
 
     @ApiOperation("公告获取")
-    @PostMapping("/notice/get")
-    public Result<Notice> getNotice() {
+    @PostMapping("/get")
+    public Result<String> getNotice() {
         Integer grantedLevel = userService.grantLevel();
         try {
             String notice = redisTemplate.opsForValue().get("notice:" + grantedLevel).toString();

@@ -30,7 +30,7 @@
       </div>
     </div>
     <div v-if="showNoticeFlag" class="notice">
-      <h1>通知</h1>
+      <h1>公告</h1>
       <h2>{{ notice.title }}</h2>
       <div class="text">
         <div>{{ notice.text }}</div>
@@ -61,7 +61,9 @@ const menuItems = reactive([
   {id: '5', label: '课程管理', router: '/course_manager', grand: [0]},
   {id: '6', label: '查询学生', router: '/select_student', grand: [1]},
   {id: '7', label: '查询课程', router: '/select_course', grand: [1]},
-  {id: '8', label: '数据可视化', router: '/admin_data', grand: [0]},
+  {id: '8', label: '公告管理', router: '/notice_manager', grand: [0]},
+  {id: '9', label: '数据可视化', router: '/admin_data', grand: [0]},
+
 ])
 
 const selectMenuItem = (item) => {
@@ -123,12 +125,12 @@ const notice = reactive({
 })
 
 const getNotice = () => {
-  get('notice/notice/get', (data, msg) => {
+  get('notice/get', (data, msg) => {
         showNoticeFlag.value = true;
         msg = msg.slice(1, -1);
-        const split = msg.split(', ');
-        notice.title = split[2].split('=')[1];
-        notice.text = split[3].split('=')[1];
+        const split = msg.split('=');
+        notice.title = split[3].split(',')[0];
+        notice.text = split[4];
       }, (msg) => {
 
         console.log(msg);
@@ -182,6 +184,8 @@ const getNotice = () => {
 .left-menu {
   min-width: 200px;
   backdrop-filter: blur(10px);
+  background-color: rgba(113, 175, 229, 0.08);
+  border-top: 1px solid #ccc;
 }
 
 ul {
@@ -189,7 +193,6 @@ ul {
   padding: 0;
   list-style-type: none;
   text-align: center;
-
 }
 
 li {
@@ -237,7 +240,7 @@ li {
 }
 
 .notice .text {
-  height: 650px;
+  height: 630px;
   margin: 14px 0;
   background-color: #4d4d72;
   display: flex;
@@ -250,6 +253,7 @@ li {
 }
 
 .notice button {
+  margin-top: 10px;
   padding: 10px 20px;
   border: none;
   border-radius: 8px;

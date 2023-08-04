@@ -46,7 +46,7 @@
           <button v-show="userPage.total/pagesize>page" @click="nextPage">
             下一页
           </button>
-          <div class="total">共{{ userPage.total / pagesize }}页</div>
+          <div class="total">共{{ Math.ceil(userPage.total / pagesize) }}页</div>
           <input v-model="targetPage" :max="userPage.total/pagesize" min="1" type="number">
           <button @click="gotoPage">跳转</button>
         </div>

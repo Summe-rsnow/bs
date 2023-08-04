@@ -43,6 +43,10 @@ const routes = [
             {
                 path: '/admin_data',
                 component: () => import('../views/AdminData.vue')
+            },
+            {
+                path: '/notice_manager',
+                component: () => import('../views/NoticeManager.vue')
             }
         ]
     },
