@@ -90,7 +90,8 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
                         "/user/**",
                         "/grade/**",
                         "/course/**",
-                        "/common/**")
+                        "/common/**",
+                        "/notice/**")
                 .excludePathPatterns(
                         "/user/login",
                         "/user/logout",

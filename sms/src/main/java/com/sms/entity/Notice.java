@@ -1,9 +1,9 @@
-package com.sms.dto;
+package com.sms.entity;
 
 import lombok.Data;
 
 @Data
-public class SetNoticeDto {
+public class Notice {
     private Integer[] grants;
     private Integer hours;
     private String title;

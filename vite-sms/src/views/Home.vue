@@ -29,6 +29,17 @@
         <router-view></router-view>
       </div>
     </div>
+    <div v-if="showNoticeFlag" class="notice">
+      <h1>通知</h1>
+      <h2>{{ notice.title }}</h2>
+      <div class="text">
+        <div>{{ notice.text }}</div>
+      </div>
+      <button :disabled="countdown > 0" @click="showNoticeFlag=false">
+        确定{{ countdown > 0 ? ' (' + countdown + ')' : '' }}
+      </button>
+    </div>
+    <div v-if="showNoticeFlag" class="blur-background"></div>
   </div>
 </template>
 
@@ -92,7 +103,38 @@ onBeforeMount(() => {
 
 onMounted(() => {
   router.push("/info");
+  getNotice();
+  countdownInterval();
 })
+
+const countdown = ref(5);
+
+const countdownInterval = () => {
+  setInterval(() => {
+    countdown.value--;
+  }, 1000);
+}
+
+const showNoticeFlag = ref(false);
+
+const notice = reactive({
+  title: '',
+  text: ''
+})
+
+const getNotice = () => {
+  get('notice/notice/get', (data, msg) => {
+        showNoticeFlag.value = true;
+        msg = msg.slice(1, -1);
+        const split = msg.split(', ');
+        notice.title = split[2].split('=')[1];
+        notice.text = split[3].split('=')[1];
+      }, (msg) => {
+
+        console.log(msg);
+      }
+  )
+}
 </script>
 
 <style scoped>
@@ -168,5 +210,67 @@ li {
   border-top: 1px solid #ccc;
   flex-grow: 1;
   background-color: #868e96;
+}
+
+.notice {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 830px;
+  padding: 24px;
+  background-color: #414157;
+  text-align: center;
+  z-index: 2;
+  border-radius: 8px;
+}
+
+.notice h1 {
+  font-size: 38px;
+  margin: 10px 0;
+}
+
+.notice h2 {
+  font-size: 24px;
+  margin: 10px 0;
+}
+
+.notice .text {
+  height: 650px;
+  margin: 14px 0;
+  background-color: #4d4d72;
+  display: flex;
+  align-content: center;
+  justify-content: flex-start;
+  padding: 10px;
+  color: #ffffff;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.notice button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #63e6be;
+  color: white;
+  cursor: pointer;
+}
+
+.notice button:hover {
+  background-color: #4fcfa9;
+}
+
+.blur-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  z-index: 1;
 }
 </style>
