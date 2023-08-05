@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sms.common.Result;
+import com.sms.common.VisualizationData;
 import com.sms.dto.GradeEditDto;
 import com.sms.dto.GradeSelectDto;
 import com.sms.entity.Grade;
@@ -15,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -45,5 +47,10 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
         Page<GradeVo> gradeVopage = new Page<>(page, pagesize);
         return gradeMapper.selectTeacherPage(gradeVopage, id, gradeSelectDto);
 
+    }
+
+    @Override
+    public List<VisualizationData> gradeSelfRanking(Long id) {
+        return gradeMapper.gradeSelfRanking(id);
     }
 }

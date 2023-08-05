@@ -63,7 +63,7 @@ const menuItems = reactive([
   {id: '7', label: '查询课程', router: '/select_course', grand: [1]},
   {id: '8', label: '公告管理', router: '/notice_manager', grand: [0]},
   {id: '9', label: '数据可视化', router: '/admin_data', grand: [0]},
-
+  {id: '10', label: '数据可视化', router: '/student_data', grand: [2]},
 ])
 
 const selectMenuItem = (item) => {
@@ -226,7 +226,7 @@ li {
   background-color: #414157;
   text-align: center;
   z-index: 2;
-  border-radius: 8px;
+  border-radius: 20px;
 }
 
 .notice h1 {
@@ -250,6 +250,7 @@ li {
   color: #ffffff;
   font-size: 18px;
   line-height: 1.5;
+  border-radius: 8px;
 }
 
 .notice button {

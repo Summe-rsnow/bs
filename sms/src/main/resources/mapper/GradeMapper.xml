@@ -29,4 +29,14 @@
             and c.name like '%${gradeSelectDto.courseName}%'
         </if>
     </select>
+    <select id="gradeSelfRanking" resultType="com.sms.common.VisualizationData">
+        select score as value, c.name as name
+        from grade
+                 join course as c
+                      on course_id = c.id
+        where grade.student_id = ${id}
+          and grade.deleted = 0
+        order by score desc
+        limit 5;
+    </select>
 </mapper>

@@ -4,7 +4,7 @@
 
 <script>
 import * as echarts from 'echarts/core';
-import {GridComponent, ToolboxComponent} from 'echarts/components';
+import {GridComponent, ToolboxComponent, TooltipComponent} from 'echarts/components';
 import {BarChart} from 'echarts/charts';
 import {CanvasRenderer} from 'echarts/renderers';
 
@@ -21,6 +21,9 @@ export default {
     option() {
       return {
         backgroundColor: '',
+        tooltip: {
+          trigger: 'item'
+        },
         xAxis: {
           type: 'category',
           data: this.data.map(i => i.name)
@@ -67,6 +70,7 @@ export default {
     echarts.use([
       GridComponent,
       ToolboxComponent,
+      TooltipComponent,
       BarChart,
       CanvasRenderer]);
     const myChart = this.theme ? echarts.init(this.$refs.chart, this.theme) : echarts.init(this.$refs.chart);

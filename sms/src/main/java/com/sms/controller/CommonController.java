@@ -247,4 +247,16 @@ public class CommonController {
         List<VisualizationData> list = courseService.courseCountRanking();
         return Result.success(list);
     }
+
+    @ApiOperation(("学生个人成绩排行"))
+    @PostMapping("/data/grade/self_ranking")
+    @Cacheable(cacheNames = "GradeVisualization", key = "'countRanking'")
+    public Result<List<VisualizationData>> selfRanking() {
+        if (!userService.isStudent()) {
+            return Result.error("当前用户没有该操作权限");
+        }
+        Long id = BaseContext.getCurrentId();
+        List<VisualizationData> list = gradeService.gradeSelfRanking(id);
+        return Result.success(list);
+    }
 }

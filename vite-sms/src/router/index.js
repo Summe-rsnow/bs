@@ -45,6 +45,10 @@ const routes = [
                 component: () => import('../views/AdminData.vue')
             },
             {
+                path: '/student_data',
+                component: () => import('../views/StudentData.vue')
+            },
+            {
                 path: '/notice_manager',
                 component: () => import('../views/NoticeManager.vue')
             }

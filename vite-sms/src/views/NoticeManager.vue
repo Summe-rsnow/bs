@@ -4,7 +4,7 @@
     <div class="notice">
       <div class="title">
         <label for="title">标题：</label>
-        <input id="title" type="text" v-model="noticeFormData.title"/>
+        <input id="title" v-model="noticeFormData.title" type="text"/>
       </div>
       <div class="text">
         <label for="content">内容：</label>
@@ -14,18 +14,18 @@
         <div class="grant">
           <label>发送给：</label>
           <label>
-            <input type="checkbox" v-model="noticeFormData.grants" value="0"/>管理员
+            <input v-model="noticeFormData.grants" type="checkbox" value="0"/>管理员
           </label>
           <label>
-            <input type="checkbox" v-model="noticeFormData.grants" value="1"/>教师
+            <input v-model="noticeFormData.grants" type="checkbox" value="1"/>教师
           </label>
           <label>
-            <input type="checkbox" v-model="noticeFormData.grants" value="2"/>学生
+            <input v-model="noticeFormData.grants" type="checkbox" value="2"/>学生
           </label>
         </div>
         <div class="hour">
           <label>公告时长：</label>
-          <input v-model="noticeFormData.hours" type="number" min="1" max="100">
+          <input v-model="noticeFormData.hours" max="100" min="1" type="number">
           <select v-model="timeFlag">
             <option value="1">小时</option>
             <option value="24">天</option>
@@ -39,8 +39,8 @@
     <div v-if="showNoticeFlag" class="confirm">
       <h3>确认提交</h3>
       <div class="button">
-        <button @click="submitNoticeForm" class="l">确定</button>
-        <button @click="showNoticeFlag=false" class="r">取消</button>
+        <button class="l" @click="submitNoticeForm">确定</button>
+        <button class="r" @click="showNoticeFlag=false">取消</button>
       </div>
     </div>
     <div v-if="showNoticeFlag" class="blur-background"></div>

@@ -83,43 +83,5 @@ const courseCountRanking = () => {
 </script>
 
 <style lang="less" scoped>
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  h1 {
-    font-size: 60px;
-    margin: 0 0 20px;
-    padding: 20px 660px 10px;
-    border-bottom: 2px solid #ccc;
-  }
-
-  .charts {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    gap: 40px;
-
-    .chart {
-      margin: 40px 0;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-radius: 20px;
-      background-color: #4fcfa9;
-      box-shadow: 14px 14px 40px #343a40;
-
-      h2 {
-        font-size: 30px;
-        font-weight: 600;
-        color: #333333;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
-      }
-    }
-  }
-}
+@import "../assets/css/data.less";
 </style>
