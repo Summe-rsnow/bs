@@ -3,6 +3,7 @@ package com.sms.interceptor;
 import com.sms.common.BaseContext;
 import com.sms.config.JwtConfig;
 import com.sms.utils.JwtUtils;
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -29,8 +30,8 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             response.setStatus(401);
             return false;
         }
-        Long id = JwtUtils.getUserIdFromToken(token, jwtConfig.getMySecretKey());
-        BaseContext.setCurrentId(id);
+        Claims claims = JwtUtils.getClaims(token, jwtConfig.getMySecretKey());
+        BaseContext.setCurrentClaims(claims);
         return true;
     }
 }

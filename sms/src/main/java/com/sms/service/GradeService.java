@@ -22,4 +22,6 @@ public interface GradeService extends IService<Grade> {
     Page<GradeVo> getVoPageByTeacherId(Long id, Integer page, Integer pagesize, GradeSelectDto gradeSelectDto);
 
     List<VisualizationData> gradeSelfRanking(Long id);
+
+    List<VisualizationData> passRanking(Long id, Integer flag);
 }

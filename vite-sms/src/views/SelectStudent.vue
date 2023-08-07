@@ -130,9 +130,12 @@ const cancelForm = () => {
 
 table td:nth-child(1),
 table td:nth-child(2),
-table td:nth-child(4),
 table td:nth-child(7) {
-  width: 19%;
+  width: 17%;
+}
+
+table td:nth-child(4) {
+  width: 25%;
 }
 
 table td:nth-child(3) {

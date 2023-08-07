@@ -34,9 +34,25 @@
         from grade
                  join course as c
                       on course_id = c.id
-        where grade.student_id = ${id}
-          and grade.deleted = 0
+        where grade.deleted = 0
+          and grade.student_id = ${id}
         order by score desc
+        limit 5;
+    </select>
+    <select id="passRanking" resultType="com.sms.common.VisualizationData">
+        select c.name as name, SUM(IF(score >= 60, 1, 0)) / COUNT(*) * 100 as value
+        from grade
+        join course as c
+        on grade.course_id = c.id
+        where c.deleted = 0
+        and grade.teacher_id = ${id}
+        group by course_id
+        <if test="flag == 0">
+            order by value desc
+        </if>
+        <if test="flag == 1">
+            order by value asc
+        </if>
         limit 5;
     </select>
 </mapper>

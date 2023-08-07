@@ -15,12 +15,13 @@ public class JwtUtils {
      * @param id
      * @return
      */
-    public static String generateToken(Long id, long timeout, String secretKey) {
+    public static String generateToken(Long id, Integer userGrant, Long timeout, String secretKey) {
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + timeout);
 
         return Jwts.builder()
-                .setSubject(String.valueOf(id))
+                .claim("id", id)
+                .claim("userGrant", userGrant)
                 .setIssuedAt(now)
                 .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
@@ -33,19 +34,19 @@ public class JwtUtils {
      * @param token
      * @return
      */
-    public static Long getUserIdFromToken(String token, String secretKey) {
-        Claims claims = Jwts.parser()
+    public static Claims getClaims(String token, String secretKey) {
+
+        return Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
-
-        return Long.valueOf(claims.getSubject());
     }
 
     /**
      * 判断令牌的有效性
      *
      * @param token
+     * @param secretKey
      * @return
      */
     public static boolean validateToken(String token, String secretKey) {

@@ -19,4 +19,6 @@ public interface GradeMapper extends BaseMapper<Grade> {
     Page<GradeVo> selectStudentPage(@Param("page") Page<GradeVo> gradePage, @Param("id") Long id, @Param("gradeSelectDto") GradeSelectDto gradeSelectDto);
 
     List<VisualizationData> gradeSelfRanking(@Param("id") Long id);
+
+    List<VisualizationData> passRanking(@Param("id") Long id, @Param("flag") Integer flag);
 }

@@ -10,6 +10,7 @@ import com.sms.dto.GradeSelectDto;
 import com.sms.dto.UserSelectDto;
 import com.sms.entity.Course;
 import com.sms.entity.Grade;
+import com.sms.entity.User;
 import com.sms.service.CourseService;
 import com.sms.service.GradeService;
 import com.sms.service.UserService;
@@ -53,9 +54,8 @@ public class GradeController {
         LambdaUpdateWrapper<Course> courseWrapper = new LambdaUpdateWrapper<>();
         courseWrapper.eq(Course::getId, grade.getCourseId());
         Course course = courseService.getOne(courseWrapper);
-
-        if (!course.getTeacherId().equals(grade.getTeacherId())) {
-            return Result.error("创建的成绩应该为教师自己所授课程的成绩");
+        if (course == null || !course.getTeacherId().equals(grade.getTeacherId())) {
+            return Result.error("课程id不存在或创建的成绩不为教师自己所授课程的成绩");
         }
         LambdaUpdateWrapper<Grade> gradeWrapper = new LambdaUpdateWrapper<>();
         gradeWrapper.eq(Grade::getStudentId, grade.getStudentId());
@@ -63,6 +63,10 @@ public class GradeController {
         Grade one = gradeService.getOne(gradeWrapper);
         if (one != null) {
             return Result.error("该生的改门课程已经有成绩了，请勿重复添加");
+        }
+        User user = userService.getById(grade.getStudentId());
+        if (user == null) {
+            return Result.error("该学生id不存在，请重试");
         }
         log.info("新增成绩信息:{}", grade);
         gradeService.save(grade);

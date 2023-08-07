@@ -45,6 +45,10 @@ const routes = [
                 component: () => import('../views/AdminData.vue')
             },
             {
+                path: '/teacher_data',
+                component: () => import('../views/TeacherData.vue')
+            },
+            {
                 path: '/student_data',
                 component: () => import('../views/StudentData.vue')
             },

@@ -248,9 +248,27 @@ public class CommonController {
         return Result.success(list);
     }
 
+    /**
+     * 教师各科成绩及格率排行
+     *
+     * @param flag 0为降序 1为升序
+     * @return
+     */
+    @ApiOperation("教师各科成绩及格率排行可视化数据")
+    @PostMapping("/data/grade/pass_ranking/{flag}")
+    @Cacheable(cacheNames = "GradeVisualization", key = "'passRanking'+#root.args[0]")
+    public Result<List<VisualizationData>> passRanking(@PathVariable Integer flag) {
+        if (!userService.isTeacher()) {
+            return Result.error("当前用户没有该操作权限");
+        }
+        Long id = BaseContext.getCurrentId();
+        List<VisualizationData> list = gradeService.passRanking(id, flag);
+        return Result.success(list);
+    }
+
     @ApiOperation(("学生个人成绩排行"))
     @PostMapping("/data/grade/self_ranking")
-    @Cacheable(cacheNames = "GradeVisualization", key = "'countRanking'")
+    @Cacheable(cacheNames = "GradeVisualization", key = "'selfRanking'")
     public Result<List<VisualizationData>> selfRanking() {
         if (!userService.isStudent()) {
             return Result.error("当前用户没有该操作权限");

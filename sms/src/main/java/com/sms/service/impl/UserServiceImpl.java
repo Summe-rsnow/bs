@@ -57,16 +57,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         UseVo vo = new UseVo();
         BeanUtils.copyProperties(user, vo);
         Long id = vo.getId();
+        Integer userGrant = vo.getUserGrant();
         //如果勾选记住我 加入if逻辑
         String token;
         if (userLoginDto.isRememberMe()) {
-            token = JwtUtils.generateToken(id, 604800000L, jwtConfig.getMySecretKey());//如果勾选记住我 设置1周时长的token
+            token = JwtUtils.generateToken(id, userGrant, 604800000L, jwtConfig.getMySecretKey());//如果勾选记住我 设置1周时长的token
             Cookie rememberMe = new Cookie("rememberMe", token);
             rememberMe.setMaxAge(604800);
             rememberMe.setPath("/");
             response.addCookie(rememberMe);
         } else {
-            token = JwtUtils.generateToken(id, jwtConfig.getTimeout(), jwtConfig.getMySecretKey());
+            token = JwtUtils.generateToken(id, userGrant, jwtConfig.getTimeout(), jwtConfig.getMySecretKey());
         }
         vo.setToken(token);
         return Result.success(vo);//返回查到对象（以json格式）
@@ -166,9 +167,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Integer grantLevel() {
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getId, BaseContext.getCurrentId());
-        return userMapper.selectOne(queryWrapper).getUserGrant();
+        return BaseContext.getCurrentUserGrant();
     }
 
     @Override

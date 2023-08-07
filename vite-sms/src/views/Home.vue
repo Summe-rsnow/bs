@@ -63,6 +63,7 @@ const menuItems = reactive([
   {id: '7', label: '查询课程', router: '/select_course', grand: [1]},
   {id: '8', label: '公告管理', router: '/notice_manager', grand: [0]},
   {id: '9', label: '数据可视化', router: '/admin_data', grand: [0]},
+  {id: '9', label: '数据可视化', router: '/teacher_data', grand: [1]},
   {id: '10', label: '数据可视化', router: '/student_data', grand: [2]},
 ])
 

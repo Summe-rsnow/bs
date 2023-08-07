@@ -17,6 +17,8 @@ import com.sms.utils.JwtUtils;
 import com.sms.utils.SendPhoneCodeUtils;
 import com.sms.utils.ValidateCodeUtils;
 import com.sms.vo.UseVo;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.impl.DefaultClaims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -96,7 +98,8 @@ public class UserController {
     @ApiOperation("通过令牌获取个人信息")
     @PostMapping("/self/info")
     public Result<User> selfInfo(@RequestBody Token token) {
-        Long id = JwtUtils.getUserIdFromToken(token.getToken(), jwtConfig.getMySecretKey());
+        Claims claims = JwtUtils.getClaims(token.getToken(), jwtConfig.getMySecretKey());
+        Long id = (Long) claims.get("id");
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(User::getId, id);
         User user = userService.getOne(wrapper);
@@ -156,16 +159,23 @@ public class UserController {
         String username = pwdForgetDto.getUsername();
         // 从Redis里获取验证码
         String phoneCode = (String) redisTemplate.boundValueOps("phoneCode:" + username).get();
-        if (!phoneCode.equals(pwdForgetDto.getVerificationCode())) {
+        if (!pwdForgetDto.getVerificationCode().equals(phoneCode)) {
             return Result.error("验证码错误或已失效，请重试");
         }
+        //根据用户名获取用户信息
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(User::getUsername, username);
         User user = userService.getOne(wrapper);
+
         String md5Password = DigestUtils.md5DigestAsHex(pwdForgetDto.getNewPwd().getBytes());
         user.setPassword(md5Password);
-        //因为还没登录 自动填充需要id 需要手动设置
-        BaseContext.setCurrentId(user.getId());
+
+        //因为还没登录 Mybatis自动填充功能需要id 需要手动设置
+        Claims claims = new DefaultClaims();
+        claims.put("id", user.getId());
+        claims.put("userGrant", user.getUserGrant());
+        BaseContext.setCurrentClaims(claims);
+
         userService.updateById(user);
         return Result.success("重置密码成功");
     }

@@ -53,4 +53,9 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
     public List<VisualizationData> gradeSelfRanking(Long id) {
         return gradeMapper.gradeSelfRanking(id);
     }
+
+    @Override
+    public List<VisualizationData> passRanking(Long id, Integer flag) {
+        return gradeMapper.passRanking(id, flag);
+    }
 }
