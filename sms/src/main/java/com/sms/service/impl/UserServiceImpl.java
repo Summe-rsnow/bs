@@ -91,9 +91,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Result<String> addUser(List<User> users) {
-        if (!isAdmin()) {
-            return Result.error("当前用户没有该操作权限");
-        }
         List<User> processedUsers = new ArrayList<>();
         StringBuilder errorMsg = new StringBuilder();
         String md5Password = DigestUtils.md5DigestAsHex("123456".getBytes());

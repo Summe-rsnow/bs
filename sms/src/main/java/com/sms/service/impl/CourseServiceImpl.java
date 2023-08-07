@@ -1,5 +1,6 @@
 package com.sms.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sms.common.Result;
@@ -35,13 +36,31 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     }
 
     @Override
-    public Result<String> add(Course course) {
+    public Result<String> addCourse(Course course) {
         User user = userMapper.selectById(course.getTeacherId());
         if (user == null || user.getUserGrant() != 1) {
             return Result.error("该id不是教师id!");
         }
         log.info("添加课程:{}", course);
         save(course);
+        return Result.success("添加成功");
+    }
+
+    @Override
+    public Result<String> addCourse(List<Course> courses) {
+        Integer flag = 0;
+        LambdaUpdateWrapper<Course> wrapper = new LambdaUpdateWrapper<>();
+
+        for (Course course : courses) {
+            User user = userMapper.selectById(course.getTeacherId());
+            if (user == null || user.getUserGrant() != 1) {
+                flag++;
+            }
+        }
+        if (flag > 0){
+            return Result.error("请校验信息的合法性");
+        }
+        saveBatch(courses);
         return Result.success("添加成功");
     }
 

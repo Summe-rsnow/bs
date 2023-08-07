@@ -431,7 +431,7 @@ const onFileChange = (event) => {
 }
 
 const getTemplate = () => {
-  fetch('/UserTemplate.csv') // 替换为实际文件的路径
+  fetch('/UserTemplate.csv')
       .then(response => response.blob())
       .then(blob => {
         const url = URL.createObjectURL(blob);

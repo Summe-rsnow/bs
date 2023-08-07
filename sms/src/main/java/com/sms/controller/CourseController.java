@@ -1,5 +1,8 @@
 package com.sms.controller;
 
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.text.csv.CsvReader;
+import cn.hutool.core.text.csv.CsvUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sms.common.Result;
@@ -14,8 +17,13 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 @Api(tags = "课程相关接口")
 @RestController
@@ -41,7 +49,30 @@ public class CourseController {
         if (!userService.isAdmin()) {
             return Result.error("当前用户没有该操作权限");
         }
-        return courseService.add(course);
+        return courseService.addCourse(course);
+    }
+
+    @ApiOperation("文件批量添加课程")
+    @PostMapping("/csv/add")
+    @CacheEvict(cacheNames = "CourseVisualization", allEntries = true)
+    public Result<String> csvAdd(MultipartFile file) throws IOException {
+        if (file == null) {
+            return Result.error("未选择文件");
+        }
+        // 获取文件后缀名
+        String filename = file.getOriginalFilename();
+        System.out.println(filename);
+        String[] split = filename.split("\\.");
+        String fileExtension = split[split.length - 1];
+        if (!fileExtension.equals("csv")) {
+            return Result.error("请上传格式正确的文件");
+        }
+        //从流读取csv文件
+        InputStream in = file.getInputStream();
+        BufferedReader utf8Reader = IoUtil.getUtf8Reader(in);
+        CsvReader reader = CsvUtil.getReader();
+        List<Course> list = reader.read(utf8Reader, Course.class);
+        return courseService.addCourse(list);
     }
 
     /**

@@ -6,6 +6,12 @@
         <div class="function">
           <button class="add" @click="add"><img alt="" src="../assets/icons/add.svg">新增</button>
           <button class="select" @click="select"><img alt="" src="../assets/icons/search.svg">查询</button>
+          <button class="select" @click="getTemplate"><img alt="" src="../assets/icons/file.svg">模版获取</button>
+          <button class="csv" @click="onCSV">
+            <img src="../assets/icons/add_all.svg">
+            <input v-show="false" id="csv" accept=".csv" name="select" type="file" v-on:change="onFileChange">
+            批量添加
+          </button>
         </div>
         <table>
           <thead>
@@ -232,6 +238,36 @@ const resetFormData = () => {
   formData.id = null;
   formData.name = null;
   formData.teacherId = null;
+}
+
+const onCSV = () => {
+  document.getElementById('csv').click();
+}
+
+let file;
+
+const onFileChange = (event) => {
+  file = event.target.files[0];
+  const formData = new FormData();
+  formData.append('file', file);
+  post('/course/csv/add', formData, (data, msg) => {
+    alert(msg);
+  })
+}
+
+const getTemplate = () => {
+  fetch('/CourseTemplate.csv')
+      .then(response => response.blob())
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'CourseTemplate.csv'; // 设置文件名
+        link.click();
+      })
+      .catch(error => {
+        console.error('获取文件失败:', error);
+      });
 }
 </script>
 

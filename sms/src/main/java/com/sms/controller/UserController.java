@@ -190,6 +190,9 @@ public class UserController {
     @PostMapping("/add")
     @CacheEvict(cacheNames = "UserVisualization", allEntries = true)
     public Result<String> add(@RequestBody UserAddDto userAddDto) {
+        if (!userService.isAdmin()) {
+            return Result.error("当前用户没有该操作权限");
+        }
         User user = new User();
         BeanUtils.copyProperties(userAddDto, user);
         List<User> users = List.of(user);
@@ -206,7 +209,10 @@ public class UserController {
     @ApiOperation("文件批量添加用户")
     @PostMapping("/csv/add")
     @CacheEvict(cacheNames = "UserVisualization", allEntries = true)
-    public Result<String> csvAdd(MultipartFile file) throws IOException {
+    public Result<String> csvUserAdd(MultipartFile file) throws IOException {
+        if (!userService.isAdmin()) {
+            return Result.error("当前用户没有该操作权限");
+        }
         if (file == null) {
             return Result.error("未选择文件");
         }
