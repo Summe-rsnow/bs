@@ -3,12 +3,17 @@ package com.sms.service.impl;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sms.common.BaseContext;
 import com.sms.common.Result;
 import com.sms.common.VisualizationData;
 import com.sms.dto.GradeEditDto;
 import com.sms.dto.GradeSelectDto;
+import com.sms.entity.Course;
 import com.sms.entity.Grade;
+import com.sms.entity.User;
+import com.sms.mapper.CourseMapper;
 import com.sms.mapper.GradeMapper;
+import com.sms.mapper.UserMapper;
 import com.sms.service.GradeService;
 import com.sms.vo.GradeVo;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +29,12 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
 
     @Resource
     GradeMapper gradeMapper;
+
+    @Resource
+    UserMapper userMapper;
+
+    @Resource
+    CourseMapper courseMapper;
 
     @Override
     public Result<String> edit(GradeEditDto gradeEditDto) {
@@ -57,5 +68,30 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
     @Override
     public List<VisualizationData> passRanking(Long id, Integer flag) {
         return gradeMapper.passRanking(id, flag);
+    }
+
+    @Override
+    public Result<String> addGrade(List<Grade> grades) {
+        Long id = BaseContext.getCurrentId();
+        for (Grade grade : grades) {
+            grade.setTeacherId(id);
+            Course course = courseMapper.selectById(grade.getCourseId());
+            if (course == null || !course.getTeacherId().equals(grade.getTeacherId())) {
+                return Result.error("课程id不存在或创建的成绩不为教师自己所授课程的成绩");
+            }
+            LambdaUpdateWrapper<Grade> gradeWrapper = new LambdaUpdateWrapper<>();
+            gradeWrapper.eq(Grade::getStudentId, grade.getStudentId());
+            gradeWrapper.eq(Grade::getCourseId, grade.getCourseId());
+            Grade one = getOne(gradeWrapper);
+            if (one != null) {
+                return Result.error("该生的改门课程已经有成绩了，请勿重复添加");
+            }
+            User user = userMapper.selectById(grade.getStudentId());
+            if (user == null) {
+                return Result.error("该学生id不存在，请重试");
+            }
+        }
+        saveBatch(grades);
+        return Result.success("添加成功");
     }
 }

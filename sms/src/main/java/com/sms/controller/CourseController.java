@@ -52,10 +52,20 @@ public class CourseController {
         return courseService.addCourse(course);
     }
 
+    /**
+     * 从csv批量导入课程的接口
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
     @ApiOperation("文件批量添加课程")
     @PostMapping("/csv/add")
     @CacheEvict(cacheNames = "CourseVisualization", allEntries = true)
     public Result<String> csvAdd(MultipartFile file) throws IOException {
+        if (!userService.isAdmin()) {
+            return Result.error("当前用户没有该操作权限");
+        }
         if (file == null) {
             return Result.error("未选择文件");
         }

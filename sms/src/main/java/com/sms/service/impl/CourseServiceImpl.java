@@ -57,7 +57,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
                 flag++;
             }
         }
-        if (flag > 0){
+        if (flag > 0) {
             return Result.error("请校验信息的合法性");
         }
         saveBatch(courses);

@@ -252,6 +252,7 @@ const onFileChange = (event) => {
   formData.append('file', file);
   post('/course/csv/add', formData, (data, msg) => {
     alert(msg);
+    flash();
   })
 }
 

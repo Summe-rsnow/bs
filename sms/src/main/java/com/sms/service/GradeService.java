@@ -24,4 +24,6 @@ public interface GradeService extends IService<Grade> {
     List<VisualizationData> gradeSelfRanking(Long id);
 
     List<VisualizationData> passRanking(Long id, Integer flag);
+
+    Result<String> addGrade(List<Grade> grades);
 }
