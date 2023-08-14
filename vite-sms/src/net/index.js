@@ -1,23 +1,20 @@
 import axios from 'axios';
 import {useUserStore} from '../stores/index.js';
 
-axios.defaults.baseURL = '/api';
-axios.defaults.withCredentials = true;
-
 const userStore = useUserStore();
 const defaultFailure = (msg) => alert(msg);
 const defaultError = (error) => console.log(error);
 
-function getToken() {
-    return userStore.token;
-}
-
 axios.interceptors.request.use(
     (config) => {
-        // 在 GET 请求中添加请求头
-        if (getToken()) {
+        //基础url
+        config.baseURL = '/api';
+        //不携带cookie
+        config.withCredentials = false;
+
+        if (userStore.token) { //如果存在令牌
             // 添加通用的请求头
-            config.headers['Authorization'] = getToken();
+            config.headers['Authorization'] = userStore.token;
         }
         return config;
     },

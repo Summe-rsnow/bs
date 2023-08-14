@@ -96,7 +96,7 @@
 <script setup>
 import Cropper from "vue3-cropper";
 import 'vue3-cropper/lib/vue3-cropper.css';
-import {reactive, ref} from "vue";
+import {reactive, ref, watch} from "vue";
 import {useUserStore} from "../stores/index.js";
 import {downloadAvatar, post, uploadAvatar} from '../net/index.js';
 import router from "../router/index.js";
@@ -126,6 +126,10 @@ const formData = reactive({
   idNumber: userStore.user.idNumber,
 });
 
+watch(() => userStore.avatarUrl, (newAvatarUrl) => {
+  imagePath.value = newAvatarUrl;
+});
+
 const onFileChange = (event) => {
   file = event.target.files[0];
   imagePath.value = URL.createObjectURL(file);
@@ -143,6 +147,12 @@ const onSave = (res) => {
   file = new File([res], "t.png", {type: "image/png"});
   cropperVisible.value = false;
 };
+
+const onCancel = () => {
+  file = undefined;
+  imagePath.value = userStore.avatarUrl;
+  cropperVisible.value = false;
+}
 
 const uploadFile = () => {
   if (!file) {
@@ -226,12 +236,6 @@ const cancelForm = () => {
   showFormFlag.value = false;
   showPwdFlag.value = false;
   blur.value = false;
-}
-
-const onCancel = () => {
-  file = undefined;
-  imagePath.value = userStore.avatarUrl;
-  cropperVisible.value = false;
 }
 </script>
 
