@@ -28,6 +28,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author sssnow
+ */
 @Service
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -129,19 +132,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         //身份证校验
         //if (idNumber != null && !"".equals(idNumber.trim()) && !IdcardUtil.isValidCard(idNumber))  这个太严格了
-        if (idNumber != null && !"".equals(idNumber.trim()) && !ReUtil.isMatch("[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9X]", idNumber)) {
+        if (idNumber != null && !idNumber.trim().isEmpty() && !ReUtil.isMatch("[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9X]", idNumber)) {
             return "用户：" + username + "身份证无效\n";
         }
         //手机验证
-        if (phone != null && !"".equals(phone.trim()) && !ReUtil.isMatch("^\\d{11}$", phone)) {
+        if (phone != null && !phone.trim().isEmpty() && !ReUtil.isMatch("^\\d{11}$", phone)) {
             return "用户：" + username + "手机号码无效\n";
         }
         //邮箱验证
-        if (email != null && !"".equals(email.trim()) && !ReUtil.isMatch("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$", email)) {
+        if (email != null && !email.trim().isEmpty() && !ReUtil.isMatch("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$", email)) {
             return "用户：" + username + "邮箱无效\n";
         }
         //用户名验证
-        if (username != null && !"".equals(username.trim()) && !ReUtil.isMatch("^[a-zA-Z][a-zA-Z0-9]{4,15}$", username)) {
+        if (username != null && !username.trim().isEmpty() && !ReUtil.isMatch("^[a-zA-Z][a-zA-Z0-9]{4,15}$", username)) {
             return "用户：" + username + "请输入5-16位账号，且账号开头为字母，只能包含字母和数字\n";
         }
         return null;

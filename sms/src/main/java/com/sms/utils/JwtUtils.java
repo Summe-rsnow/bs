@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+/**
+ * @author sssnow
+ */
 @Slf4j
 @Component
 public class JwtUtils {

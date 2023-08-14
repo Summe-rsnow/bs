@@ -5,12 +5,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sms.common.BaseContext;
 import com.sms.common.Result;
-import com.sms.common.VisualizationData;
 import com.sms.dto.GradeEditDto;
 import com.sms.dto.GradeSelectDto;
 import com.sms.entity.Course;
 import com.sms.entity.Grade;
 import com.sms.entity.User;
+import com.sms.entity.VisualizationData;
 import com.sms.mapper.CourseMapper;
 import com.sms.mapper.GradeMapper;
 import com.sms.mapper.UserMapper;
@@ -23,6 +23,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * @author sssnow
+ */
 @Service
 @Slf4j
 public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements GradeService {

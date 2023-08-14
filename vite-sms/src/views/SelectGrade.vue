@@ -70,7 +70,7 @@ const selectData = reactive({
 
 const flash = () => {
   post(`/grade/${page.value}/${pagesize.value}`, selectData,
-      (data, msg) => {
+      (data) => {
         gradePage.records = data.records;
         gradePage.total = data.total;
       }

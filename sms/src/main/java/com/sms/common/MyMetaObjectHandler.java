@@ -7,7 +7,11 @@ import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDateTime;
 
-//公共字段自动填充配置类
+/**
+ * 公共字段自动填充配置类
+ *
+ * @author sssnow
+ */
 @Configuration
 @Slf4j
 public class MyMetaObjectHandler implements MetaObjectHandler {

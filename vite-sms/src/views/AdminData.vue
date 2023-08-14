@@ -49,7 +49,7 @@ const MFRatioData = ref({title: '', data: []});
 
 const MFRatio = () => {
   MFRatioData.value.title = '男女比率';
-  get('/common/data/user/mf_ratio', (data, msg) => {
+  get('/common/data/user/mf_ratio', (data) => {
     MFRatioData.value.data = data;
   })
 }
@@ -58,7 +58,7 @@ const GrantRatioData = ref({title: '', data: []});
 
 const GrantRatio = () => {
   GrantRatioData.value.title = '用户权限比率';
-  get('/common/data/user/grant_ratio', (data, msg) => {
+  get('/common/data/user/grant_ratio', (data) => {
     GrantRatioData.value.data = data;
   })
 }
@@ -67,7 +67,7 @@ const gradeDistributionData = ref({title: '', data: []});
 
 const gradeDistribution = () => {
   gradeDistributionData.value.title = '成绩总分布';
-  get('/common/data/grade/grade_distribution', (data, msg) => {
+  get('/common/data/grade/grade_distribution', (data) => {
     gradeDistributionData.value.data = data;
   })
 }
@@ -76,7 +76,7 @@ const courseCountRankingData = ref({title: '', data: []});
 
 const courseCountRanking = () => {
   courseCountRankingData.value.title = '教师授课数排行';
-  get('/common/data/course/count_ranking', (data, msg) => {
+  get('/common/data/course/count_ranking', (data) => {
     courseCountRankingData.value.data = data;
   })
 }

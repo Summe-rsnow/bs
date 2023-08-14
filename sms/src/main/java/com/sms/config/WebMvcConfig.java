@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
@@ -21,6 +20,9 @@ import springfox.documentation.spring.web.plugins.Docket;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * @author sssnow
+ */
 @Configuration
 @Slf4j
 public class WebMvcConfig extends WebMvcConfigurationSupport {
@@ -29,8 +31,6 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 
     /**
      * 接口文档生成配置
-     *
-     * @return
      */
     @Bean
     public Docket docket1() {

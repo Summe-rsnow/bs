@@ -17,7 +17,7 @@
         </if>
     </select>
 
-    <select id="courseCountRanking" resultType="com.sms.common.VisualizationData">
+    <select id="courseCountRanking" resultType="com.sms.entity.VisualizationData">
         select u.name as name, count(u.name) as value
         from course
             join user as u

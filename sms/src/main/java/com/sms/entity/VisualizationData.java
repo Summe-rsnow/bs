@@ -1,4 +1,4 @@
-package com.sms.common;
+package com.sms.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+/**
+ * @author sssnow
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

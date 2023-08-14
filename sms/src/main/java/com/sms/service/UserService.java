@@ -12,6 +12,9 @@ import com.sms.vo.UseVo;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+/**
+ * @author sssnow
+ */
 public interface UserService extends IService<User> {
     Result<UseVo> login(HttpServletResponse response, UserLoginDto userLoginDto);
 

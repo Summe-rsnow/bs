@@ -40,7 +40,7 @@ const gradeSelfRankingData = ref({title: '', data: []});
 
 const gradeSelfRanking = () => {
   gradeSelfRankingData.value.title = '个人成绩排行';
-  get('/common/data/grade/self_ranking', (data, msg) => {
+  get('/common/data/grade/self_ranking', (data) => {
     gradeSelfRankingData.value.data = data;
   })
 }

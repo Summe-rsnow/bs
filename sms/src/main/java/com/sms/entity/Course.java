@@ -7,6 +7,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author sssnow
+ */
 @Data
 public class Course {//课程表
     private Long id;

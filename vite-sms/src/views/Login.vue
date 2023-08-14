@@ -74,7 +74,7 @@ onMounted(() => {
 // 发送登录请求到后端
 const login = () => {
   post('/user/login', loginForm,
-      (data, msg) => {
+      (data) => {
         userStore.user = data;
         userStore.token = data.token;
         router.push('/home');
@@ -127,9 +127,8 @@ const rememberMe = () => {
   }
 
   if (rememberMeValue) {
-    console.log('rememberMe value:', rememberMeValue);
-    post('/user/self/info', {token: rememberMeValue}, (data, msg) => {
-      userStore.token = rememberMeValue;
+    userStore.token = rememberMeValue;
+    get('/user/self/info', (data) => {
       userStore.user = data;
       router.push('/home');
     })

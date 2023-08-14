@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author sssnow
+ */
 @Api(tags = "公告相关接口")
 @RestController
 @RequestMapping("/notice")

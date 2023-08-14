@@ -2,6 +2,9 @@ package com.sms.dto;
 
 import lombok.Data;
 
+/**
+ * @author sssnow
+ */
 @Data
 public class UserAddDto {
     private String username;

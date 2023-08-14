@@ -3,6 +3,9 @@ package com.sms.utils;
 import java.util.Random;
 
 
+/**
+ * @author sssnow
+ */
 public class ValidateCodeUtils {
     private static final int DEFAULT_NUMERIC_LENGTH = 4; // 默认纯数字验证码长度为4位
     private static final int DEFAULT_ALPHANUMERIC_LENGTH = 4; // 默认数字加字母验证码长度为4位

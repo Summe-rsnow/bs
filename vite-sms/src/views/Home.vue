@@ -74,7 +74,7 @@ const selectMenuItem = (item) => {
 
 const logout = () => {
   get('user/logout',
-      (data, msg) => {
+      () => {
         userStore.user = null;
         userStore.token = '';
         //去掉cookie

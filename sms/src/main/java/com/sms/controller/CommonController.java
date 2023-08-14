@@ -5,9 +5,9 @@ import cn.hutool.core.io.IoUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.sms.common.BaseContext;
 import com.sms.common.Result;
-import com.sms.common.VisualizationData;
 import com.sms.entity.Grade;
 import com.sms.entity.User;
+import com.sms.entity.VisualizationData;
 import com.sms.service.CourseService;
 import com.sms.service.GradeService;
 import com.sms.service.UserService;
@@ -29,6 +29,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * @author sssnow
+ */
 @Api(tags = "通用接口")
 @RestController
 @RequestMapping("/common")

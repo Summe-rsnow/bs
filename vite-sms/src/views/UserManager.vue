@@ -8,7 +8,7 @@
           <button class="select" @click="select"><img alt="" src="../assets/icons/search.svg">查询</button>
           <button class="select" @click="getTemplate"><img alt="" src="../assets/icons/file.svg">模版获取</button>
           <button class="csv" @click="onCSV">
-            <img src="../assets/icons/add_all.svg">
+            <img alt="" src="../assets/icons/add_all.svg">
             <input v-show="false" id="csv" accept=".csv" name="select" type="file" v-on:change="onFileChange">
             批量添加
           </button>
@@ -225,7 +225,7 @@ const selectData = reactive({
 
 const flash = () => {
   post(`/user/${page.value}/${pagesize.value}`, selectData,
-      (data, msg) => {
+      (data) => {
         userPage.records = data.records;
         userPage.total = data.total;
       }

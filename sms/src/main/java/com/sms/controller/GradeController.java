@@ -103,7 +103,7 @@ public class GradeController {
         System.out.println(filename);
         String[] split = filename.split("\\.");
         String fileExtension = split[split.length - 1];
-        if (!fileExtension.equals("csv")) {
+        if (!"csv".equals(fileExtension)) {
             return Result.error("请上传格式正确的文件");
         }
         //从流读取csv文件

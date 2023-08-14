@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sms.common.BaseContext;
 import com.sms.common.Result;
-import com.sms.common.Token;
 import com.sms.config.CodeConfig;
 import com.sms.config.JwtConfig;
 import com.sms.dto.*;
@@ -92,13 +91,14 @@ public class UserController {
     /**
      * remember me功能配套接口 直接通过令牌获取信息
      *
-     * @param token
+     * @param request
      * @return
      */
     @ApiOperation("通过令牌获取个人信息")
     @PostMapping("/self/info")
-    public Result<User> selfInfo(@RequestBody Token token) {
-        Claims claims = JwtUtils.getClaims(token.getToken(), jwtConfig.getMySecretKey());
+    public Result<User> selfInfo(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        Claims claims = JwtUtils.getClaims(token, jwtConfig.getMySecretKey());
         Long id = (Long) claims.get("id");
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(User::getId, id);
@@ -221,7 +221,7 @@ public class UserController {
         System.out.println(filename);
         String[] split = filename.split("\\.");
         String fileExtension = split[split.length - 1];
-        if (!fileExtension.equals("csv")) {
+        if (!"csv".equals(fileExtension)) {
             return Result.error("请上传格式正确的文件");
         }
         //从流读取csv文件

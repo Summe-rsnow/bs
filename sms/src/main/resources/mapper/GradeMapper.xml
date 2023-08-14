@@ -29,7 +29,7 @@
             and c.name like '%${gradeSelectDto.courseName}%'
         </if>
     </select>
-    <select id="gradeSelfRanking" resultType="com.sms.common.VisualizationData">
+    <select id="gradeSelfRanking" resultType="com.sms.entity.VisualizationData">
         select score as value, c.name as name
         from grade
                  join course as c
@@ -39,7 +39,7 @@
         order by score desc
         limit 5;
     </select>
-    <select id="passRanking" resultType="com.sms.common.VisualizationData">
+    <select id="passRanking" resultType="com.sms.entity.VisualizationData">
         select c.name as name, SUM(IF(score >= 60, 1, 0)) / COUNT(*) * 100 as value
         from grade
         join course as c

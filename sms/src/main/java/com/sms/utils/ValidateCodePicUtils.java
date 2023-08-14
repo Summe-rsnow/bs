@@ -9,6 +9,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * @author sssnow
+ */
 public class ValidateCodePicUtils {
     private static Color getRandomColor() {
         return new Color(RandomUtil.randomInt(20, 130), RandomUtil.randomInt(20, 130), RandomUtil.randomInt(20, 130));

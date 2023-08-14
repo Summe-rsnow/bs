@@ -46,7 +46,7 @@ const gradePassRankingDescData = ref({title: '', data: []});
 
 const gradePassRankingDesc = () => {
   gradePassRankingDescData.value.title = '各科及格率排行(降序)';
-  get('/common/data/grade/pass_ranking/0', (data, msg) => {
+  get('/common/data/grade/pass_ranking/0', (data) => {
     gradePassRankingDescData.value.data = data;
   })
 }
@@ -55,7 +55,7 @@ const gradePassRankingAscData = ref({title: '', data: []});
 
 const gradePassRankingAsc = () => {
   gradePassRankingAscData.value.title = '各科及格率排行(升序)';
-  get('/common/data/grade/pass_ranking/1', (data, msg) => {
+  get('/common/data/grade/pass_ranking/1', (data) => {
     gradePassRankingAscData.value.data = data;
   })
 }

@@ -7,6 +7,9 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * @author sssnow
+ */
 @Configuration
 @MapperScan("com.sms.mapper")
 public class MybatisPlusConfig {

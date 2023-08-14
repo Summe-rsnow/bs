@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * @author sssnow
+ */
 @Data
 public class Result<T> implements Serializable {
 
@@ -18,7 +21,7 @@ public class Result<T> implements Serializable {
     }
 
     public static <T> Result<T> success(T object, String msg) {
-        Result<T> result = new Result<T>();
+        Result<T> result = new Result<>();
         result.data = object;
         result.msg = msg;
         result.code = 1;
@@ -26,21 +29,21 @@ public class Result<T> implements Serializable {
     }
 
     public static <T> Result<T> success(String msg) {
-        Result<T> result = new Result<T>();
+        Result<T> result = new Result<>();
         result.msg = msg;
         result.code = 1;
         return result;
     }
 
     public static <T> Result<T> success(T object) {
-        Result<T> result = new Result<T>();
+        Result<T> result = new Result<>();
         result.data = object;
         result.code = 1;
         return result;
     }
 
-    public static Result success() {
-        Result result = new Result();
+    public static Result<String> success() {
+        Result<String> result = new Result<>();
         result.code = 1;
         return result;
     }

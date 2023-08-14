@@ -9,6 +9,9 @@ import com.sms.vo.UseVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+/**
+ * @author sssnow
+ */
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
     Page<UseVo> selectUserVoPage(@Param("page") Page<UseVo> page, @Param("userSelectDto") UserSelectDto userSelectDto);
