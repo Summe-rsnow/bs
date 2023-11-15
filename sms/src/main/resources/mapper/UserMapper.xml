@@ -22,7 +22,7 @@
             and gender = '${userSelectDto.gender}'
         </if>
         <if test="userSelectDto.userGrant != null and userSelectDto.userGrant != -1">
-            and user_grant = ${userSelectDto.userGrant}
+            and user_grant = '${userSelectDto.userGrant}'
         </if>
     </select>
 </mapper>

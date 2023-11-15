@@ -34,6 +34,8 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     #开启日志
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #全局延迟加载
+    lazy-loading-enabled: false
   global-config:
     db-config:
       id-type: ASSIGN_ID
